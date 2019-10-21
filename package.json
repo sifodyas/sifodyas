@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/sifodyas",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Bring the famous bundle / kernel logic to Javascript",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",
@@ -10,6 +10,15 @@
     "email": "lisag+sifodyas@wynd.eu",
     "url": "https://github.com/sifodyas/sifodyas/issues"
   },
+  "homepage": "https://github.com/sifodyas/sifodyas",
+  "keywords": [
+    "sifodyas",
+    "di",
+    "dependency-injection",
+    "typescript",
+    "typescript-library",
+    "bundle-container"
+  ],
   "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
   "license": "SEE LICENSE IN LICENSE",
   "main": "dist/index.js",
