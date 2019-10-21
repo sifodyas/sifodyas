@@ -1,0 +1,8 @@
+imports:
+    - { resource: parameters_override_source.json }
+
+parameters:
+    foo: bar
+    bar: '%env(ENV_VAR_MOCK)%'
+    baz:
+        foo: bar

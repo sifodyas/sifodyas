@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "foo": "baz",
+    "bar": "qux",
+    "baz": {
+      "foo": "baz",
+      "bar": "baz"
+    }
+  }
+}

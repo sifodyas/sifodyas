@@ -1,0 +1,14 @@
+{
+  "parameters": {
+    "coucou": "MACONFIG DE FOLIE %kernel.name%",
+    "monobject": {
+      "wesh": 3443,
+      "az": "%kernel.name%/%env(resolve:toto)%",
+      "qsdqsd": [
+        2,
+        34,
+        5
+      ]
+    }
+  }
+}

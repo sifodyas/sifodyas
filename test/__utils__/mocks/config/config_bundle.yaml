@@ -1,0 +1,7 @@
+parameters:
+    bar: baz
+
+test:
+    p1: foo
+    p2: '%env(ENVVAR1)%'
+    p3: '%bar%'

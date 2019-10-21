@@ -1,0 +1,10 @@
+/.sass-cache/
+/node_modules/
+/dist/*
+!/dist/.gitkeep
+/example/compiled/
+
+tslint-ouput.txt
+/example/compiled/*
+
+/coverage/*

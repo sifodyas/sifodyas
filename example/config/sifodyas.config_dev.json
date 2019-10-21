@@ -1,0 +1,29 @@
+{
+  "imports": [
+    {
+      "resource": "sifodyas.parameters.yml",
+      "ignore_errors": true
+    }
+  ],
+  "parameters": {
+    "test.coucou": "WESH",
+    "zaeaz": 2,
+    "GGG": {
+      "keurkeur": "love"
+    },
+    "cccc": "@sifodyas.test"
+  },
+  "app": {
+    "DDDDDD": "coucou bébé ça va ?",
+    "sss": {
+      "tessss": [
+        "az",
+        0,
+        "eeeeee",
+        {
+          "mmmm": 9
+        }
+      ]
+    }
+  }
+}

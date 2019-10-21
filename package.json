@@ -1,0 +1,71 @@
+{
+  "name": "@sifodyas/sifodyas",
+  "version": "2.1.0",
+  "description": "Bring the famous bundle / kernel logic to Javascript",
+  "repository": {
+    "url": "git@github.com:sifodyas/sifodyas.git",
+    "type": "git"
+  },
+  "bugs": {
+    "email": "lisag+sifodyas@wynd.eu",
+    "url": "https://github.com/sifodyas/sifodyas/issues"
+  },
+  "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "UPGRADE.md"
+  ],
+  "scripts": {
+    "_webpack": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack --config config/webpack/webpack.config.ts",
+    "_webpack-dev-server": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack-dev-server --progress --env.development --env.watch --config config/webpack/webpack.config.ts",
+    "clean": "rimraf dist/*",
+    "prebuild": "yarn clean",
+    "build": "yarn _webpack --env.production -p --config-name build",
+    "build:dev": "yarn prebuild && yarn _webpack --env.development --config-name build",
+    "start": "yarn _webpack-dev-server --config-name example",
+    "test": "jest",
+    "test:coverage": "jest --coverage && open ./coverage/lcov-report/index.html",
+    "lint": "tslint --project src/tsconfig.json -c tslint.json 'src/**/*.ts*'",
+    "pub": "yarn publish"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@types/circular-dependency-plugin": "^5.0.0",
+    "@types/glob": "^7.1.1",
+    "@types/jest": "^24.0.11",
+    "@types/lodash": "^4.14.144",
+    "@types/node": "^12.11.1",
+    "@types/semver": "^6.0.2",
+    "@types/webpack": "^4.4.12",
+    "@types/webpack-dev-server": "^3.1.1",
+    "@types/yamljs": "^0.2.30",
+    "@wynd/tslint-config-wynd": "^1.5.1",
+    "circular-dependency-plugin": "^5.0.2",
+    "fork-ts-checker-webpack-plugin": "^1.5.0",
+    "glob": "^7.1.4",
+    "jest": "^24.5.0",
+    "rimraf": "^3.0.0",
+    "semver": "^6.0.0",
+    "source-map-loader": "^0.2.4",
+    "ts-jest": "^24.0.1",
+    "ts-loader": "^6.2.0",
+    "ts-node": "^8.0.3",
+    "tsconfig-paths": "^3.6.0",
+    "tslint": "^5.12.0",
+    "tslint-loader": "^3.6.0",
+    "typescript": "^3.2.4",
+    "webpack": "^4.19.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8",
+    "webpack-visualizer-plugin": "^0.1.11"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "yamljs": "^0.3.0"
+  }
+}

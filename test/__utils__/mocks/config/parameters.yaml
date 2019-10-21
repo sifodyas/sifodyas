@@ -1,0 +1,6 @@
+parameters:
+    foo: bar
+    bar: '%env(ENV_VAR_MOCK)%'
+    baz:
+        foo: bar
+        bar: baz
