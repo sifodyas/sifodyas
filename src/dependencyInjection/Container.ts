@@ -271,7 +271,7 @@ export class Container implements IContainer, IReset {
 
         this.parameterBag.add(container.parameterBag.all());
 
-        this._extensions.forEach((extension, name) => {
+        this._extensions.forEach((_, name) => {
             if (!this.extensionConfigs.has(name)) {
                 this.extensionConfigs.set(name, {});
             }
@@ -489,7 +489,7 @@ export class MergeExtensionConfigurationContainer extends Container {
     /**
      * @inheritdoc
      */
-    public async compile(resolveEnvPlaceholders = false) {
+    public async compile(_resolveEnvPlaceholders = false) {
         throw new LogicException(`Cannot compile the container in extension "${this.extensionClass}".`);
     }
 

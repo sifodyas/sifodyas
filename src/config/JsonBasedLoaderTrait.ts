@@ -112,14 +112,12 @@ export class JsonBasedLoaderTrait extends Trait {
                 invalidBehavior = ContainerError.EXCEPTION_ON_INVALID_REFERENCE;
             }
 
-            let strict = true;
             if (value.substr(-1) === '=') {
                 value = value.substr(0, -1);
-                strict = false;
             }
 
             if (invalidBehavior !== null) {
-                value = new Reference(value, invalidBehavior, strict);
+                value = new Reference(value, invalidBehavior);
             }
         }
 

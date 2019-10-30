@@ -27,6 +27,6 @@ function copyProperties(target = {}, source = {}) {
         .forEach(key => {
             const desc = Object.getOwnPropertyDescriptor(source, key);
 
-            Object.defineProperty(target, key, desc);
+            Object.defineProperty(target, key, desc!);
         });
 }

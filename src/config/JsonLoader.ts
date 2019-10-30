@@ -12,7 +12,7 @@ export class JsonLoader extends Loader {
     public async load(
         this: JsonLoader & JsonBasedLoaderTrait,
         resourceFile: ResourceFile,
-        type?: string,
+        _type?: string,
         external: boolean = false,
     ) {
         const content = JSON.parse(resourceFile.content),
