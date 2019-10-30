@@ -1,13 +1,12 @@
-import { Use } from '../../core/@/Use';
+import { Ctor, Use } from '@bios21/tstrait';
 import { Container } from '../../dependencyInjection/Container';
-import { _ContainerAwareTrait, ContainerAwareTrait } from '../../dependencyInjection/ContainerAwareTrait';
+import { ContainerAwareTrait } from '../../dependencyInjection/ContainerAwareTrait';
 import { IExtension } from '../../dependencyInjection/extension/IExtension';
 import { IBundle } from './IBundle';
 
 /**
  * An implementation of IBundle.
  */
-@Use(ContainerAwareTrait)
 abstract class BundleObject implements IBundle {
     protected name: string;
 
@@ -50,11 +49,4 @@ abstract class BundleObject implements IBundle {
 }
 
 export type BundleExtended = BundleObject & ContainerAwareTrait;
-
-declare abstract class Bundle extends BundleObject implements _ContainerAwareTrait {
-    public container: Container;
-
-    public setContainer(container: Container): void;
-}
-
-export const BundleClass = BundleObject as typeof Bundle;
+export const BundleClass = Use(ContainerAwareTrait)(BundleObject as Ctor<BundleObject>);

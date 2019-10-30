@@ -1,10 +1,10 @@
-import { Trait, Traitable } from '../core/Trait';
+import { Trait } from '@bios21/tstrait';
 import { Container } from './Container';
 
 /**
  * ContainerAware trait.
  */
-export class ContainerAwareTrait extends Trait implements _ContainerAwareTrait {
+export class ContainerAwareTrait extends Trait {
     public container: Container = null;
 
     /**
@@ -15,15 +15,4 @@ export class ContainerAwareTrait extends Trait implements _ContainerAwareTrait {
     public setContainer(container: Container): void {
         this.container = container;
     }
-}
-
-export interface _ContainerAwareTrait extends Traitable { // tslint:disable-line
-    container?: Container;
-
-    /**
-     * Sets the container.
-     *
-     * @param container A Container instance or null.
-     */
-    setContainer?(container: Container): void;
 }

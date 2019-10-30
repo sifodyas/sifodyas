@@ -1,5 +1,5 @@
+import { Use } from '@bios21/tstrait';
 import YAML from 'yamljs';
-import { Use } from '../core/@/Use';
 import { ResourceFile } from '../core/Core';
 import { JsonBasedLoaderTrait } from './JsonBasedLoaderTrait';
 import { Loader } from './Loader';

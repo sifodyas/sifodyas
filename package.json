@@ -74,6 +74,7 @@
     "webpack-visualizer-plugin": "^0.1.11"
   },
   "dependencies": {
+    "@bios21/tstrait": "^1.1.0",
     "lodash": "^4.17.15",
     "yamljs": "^0.3.0"
   }

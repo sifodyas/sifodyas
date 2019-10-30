@@ -1,6 +1,6 @@
+import { Trait } from '@bios21/tstrait';
 import merge from 'lodash/merge';
 import { Core } from '../core/Core';
-import { Trait } from '../core/Trait';
 import { ContainerError } from '../dependencyInjection';
 import { Container } from '../dependencyInjection/Container';
 import { InvalidArgumentException } from '../dependencyInjection/exception/InvalidArgumentException';

@@ -1,4 +1,4 @@
-import { Use } from '../core/@/Use';
+import { Use } from '@bios21/tstrait';
 import { ResourceFile } from '../core/Core';
 import { JsonBasedLoaderTrait } from './JsonBasedLoaderTrait';
 import { Loader } from './Loader';
