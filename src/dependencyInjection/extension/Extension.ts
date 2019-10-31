@@ -19,7 +19,7 @@ export abstract class Extension implements IExtension, IConfigurationExtension {
 
     protected processConfiguration<T>(configuration: IConfiguration, configs: T): T {
         return {
-            ...(this.processedConfig = configuration ? configuration.validateConfig(configs as any) : configs),
+            ...(this.processedConfig = configuration ? configuration.validateConfig(configs) : configs),
         };
     }
 
