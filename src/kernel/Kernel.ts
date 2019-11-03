@@ -4,7 +4,7 @@ import { JsonLoader } from '../config/JsonLoader';
 import { LoaderResolver } from '../config/LoaderResolver';
 import { YamlLoader } from '../config/YamlLoader';
 import { Core } from '../core/Core';
-import { CompilerPassType, MergeExtensionConfigurationPass } from '../dependencyInjection/compiler';
+import { Compiler, CompilerPassType, MergeExtensionConfigurationPass } from '../dependencyInjection/compiler';
 import { Container } from '../dependencyInjection/Container';
 import { InvalidArgumentException } from '../dependencyInjection/exception/InvalidArgumentException';
 import { LogicException } from '../dependencyInjection/exception/LogicException';
@@ -92,10 +92,6 @@ export abstract class Kernel implements IKernel {
             }
             this.bundles.set(name, bundle);
 
-            // TODO: Handling dependendies.
-            // let dependencies = bundle.getDependencies() || [];
-            // if (dependencies.length) {
-            // }
             if (bundle.isCore()) {
                 this.syncBundles.push(name);
             } else {
@@ -151,9 +147,8 @@ export abstract class Kernel implements IKernel {
      */
     protected async buildContainer() {
         const container = new Container();
-        if (this['process'] && typeof this['process'] === 'function') {
-            // instanceof ICompilerPass
-            container.addCompilerPass(this as any, CompilerPassType.TYPE_BEFORE_OPTIMIZATION, -10000);
+        if (Compiler.isPass(this)) {
+            container.addCompilerPass(this, CompilerPassType.TYPE_BEFORE_OPTIMIZATION, -10000);
         }
 
         container.parameterBag.add(this.getKernelParameters());

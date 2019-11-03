@@ -1,7 +1,8 @@
+import { Container } from '../Container';
 import { InvalidArgumentException } from '../exception';
 import { ICompilerPass } from './ICompilerPass';
 
-export enum CompilerPassType {
+export const enum CompilerPassType {
     TYPE_AFTER_REMOVING = 'afterRemoving',
     TYPE_BEFORE_OPTIMIZATION = 'beforeOptimization',
     TYPE_BEFORE_REMOVING = 'beforeRemoving',
@@ -23,6 +24,10 @@ export class Compiler {
     private _optimizationPasses: ICompilerPass[][] = [];
     private _removingPasses: ICompilerPass[][] = [];
 
+    public static isPass(pass: any): pass is ICompilerPass {
+        return pass['process'] && typeof pass['process'] === 'function';
+    }
+
     /**
      * Sort passes by priority.
      *
@@ -40,7 +45,7 @@ export class Compiler {
      * Run the Compiler and process all Passes.
      * @async
      */
-    public async compile(container: any /* Container */) {
+    public async compile(container: Container) {
         for (const pass of this.getPasses()) {
             await pass.process(container);
         }

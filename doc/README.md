@@ -12,7 +12,10 @@ It's used to give you some kind of structure to the low layer of your architectu
 - [Definitions](#definitions)
 - [Basic usage](#basic-usage)
 - [Main workflow](#main-workflow)
+  - [Boot sequence](#boot-sequence)
   - [Bundle.s (& Services) => Container](#bundles--services--container)
+  - [Loaders](#loaders)
+  - [EventHub](#eventhub)
 
 ## Definitions
 - `Kernel` is the entry point of a Sifodyas application. It role is to load every bundles and provides them a container to use.
@@ -75,6 +78,22 @@ await kernel.boot();
 ## Main workflow
 <img width="100%" src="img/sifodyas-kernel-global.svg" />
 
+### Boot sequence
+<img width="100%" src="img/sifodyas-flow-boot.svg" />
+<img width="100%" src="img/sifodyas-flow-async-boot.svg" />
+
+The boot sequence is a multi step process that can be for some part sync or async.  
+Check the full description [there](boot.md).
+
 ### Bundle.s (& Services) => Container
-During boot, the container is sent to each bundle to make them handle their services among other things
-You can check a deeper explaination [there](container.md)
+<img width="100%" src="img/sifodyas-container-bundle.svg" />
+<img width="100%" src="img/sifodyas-container-extension.svg" />
+
+During boot, the container is sent to each bundle to make them handle their services among other things.  
+You can check a deeper explaination [there](container.md).
+
+### Loaders
+TBD
+
+### EventHub
+TBD
