@@ -15,7 +15,7 @@ export class YamlLoader extends Loader {
     public async load(
         this: YamlLoader & JsonBasedLoaderTrait,
         resourceFile: ResourceFile,
-        type?: string,
+        _?: string,
         external = false,
     ) {
         const content = YAML.parse(resourceFile.content),

@@ -8,7 +8,7 @@ import { IBundle } from './IBundle';
  * An implementation of IBundle.
  */
 abstract class BundleObject implements IBundle {
-    protected name: string;
+    protected name!: string;
 
     /** @inheritDoc */
     public abstract async boot(): Promise<any>;
@@ -17,16 +17,16 @@ abstract class BundleObject implements IBundle {
     public abstract async shutdown(): Promise<any>;
 
     /** @inheritDoc */
-    public build(container: Container): void {}
+    public build(_container: Container): void {}
 
     /** @inheritDoc */
     public getParent(): string {
-        return null;
+        return null as any;
     }
 
     /** @inheritDoc */
     public getDependencies(): string[] {
-        return null;
+        return null as any;
     }
 
     /** @inheritDoc */
@@ -39,7 +39,7 @@ abstract class BundleObject implements IBundle {
 
     /** @inheritDoc */
     public getContainerExtension(): IExtension {
-        return null;
+        return null as any;
     }
 
     /** @inheritDoc */

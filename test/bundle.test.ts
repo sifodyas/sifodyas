@@ -1,14 +1,4 @@
-import {
-    Bundle,
-    BundleExtended,
-    Container,
-    Core,
-    Extension,
-    IConfiguration,
-    ILoader,
-    Kernel,
-    TolerantKernel,
-} from '../src';
+import { Bundle, BundleExtended, Core, Extension, IConfiguration, ILoader, Kernel, TolerantKernel } from '../src';
 import { Utils } from './__utils__/Utils';
 
 const ENV_VAR_MOCK = 'ENV_VAR_MOCK';
@@ -73,7 +63,7 @@ describe('Bundle', () => {
                 public getContainerExtension() {
                     return new class TestExtension extends Extension {
                         private configuration: IConfiguration;
-                        public getConfiguration(config: object, container: Container): IConfiguration {
+                        public getConfiguration(): IConfiguration {
                             return (this.configuration =
                                 this.configuration ||
                                 new class TestConfigueation implements IConfiguration {
@@ -82,11 +72,8 @@ describe('Bundle', () => {
                                     }
                                 }());
                         }
-                        public async load(configs: object, container: Container) {
-                            const config = this.processConfiguration(
-                                this.getConfiguration(configs, container),
-                                configs,
-                            );
+                        public async load(configs: object) {
+                            const config = this.processConfiguration(this.getConfiguration(), configs);
 
                             // p1: foo
                             // p2: '%env(ENVVAR1)%'

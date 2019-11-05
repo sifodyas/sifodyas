@@ -1,20 +1,25 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2015",
-    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+    "alwaysStrict": true,
     "downlevelIteration": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "noEmitHelpers": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": false,
     "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "target": "es2015",
     "lib": [
       "dom",
       "esnext"
-    ],
-    "removeComments": false,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noImplicitAny": false
+    ]
   }
 }

@@ -148,7 +148,7 @@ export abstract class Core {
      * @returns The string converted.
      */
     public static toSnakeCase(str: string): string {
-        return str.replace(/\.?([A-Z]+)/g, (x, y) => `_${y.toLowerCase()}`).replace(/^_/, '');
+        return str.replace(/\.?([A-Z]+)/g, (_, y) => `_${y.toLowerCase()}`).replace(/^_/, '');
     }
 
     /**
@@ -220,7 +220,7 @@ export abstract class Core {
      * @param hasOptional Define if the type has optional properties.
      * @returns True if is Object (or JSON based) with good properties, false otherwise.
      */
-    public static isPureTypedObject<T>(x: any, dummy: T, hasOptional: boolean = true): x is T {
+    public static isPureTypedObject<T extends object>(x: any, dummy: T, hasOptional: boolean = true): x is T {
         if (typeof dummy !== typeof x) {
             return false;
         }
@@ -307,7 +307,7 @@ export abstract class Core {
                     throw new LogicException('XMLHttpRequest not available.');
                 }
 
-                xhr.onreadystatechange = ev => {
+                xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE) {
                         if (xhr.status === 200) {
                             ok({ path: resourceUrl, content: xhr.responseText });
