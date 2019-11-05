@@ -1,4 +1,3 @@
-import { Container } from './Container';
 import { ContainerError } from './IContainer';
 
 /**
@@ -7,7 +6,6 @@ import { ContainerError } from './IContainer';
 export class Reference {
     private id: string;
     private invalidBehavior: ContainerError;
-    private strict: boolean; // tslint:disable-line:no-unused-variable
 
     /**
      * @param id The service identifier.
@@ -16,10 +14,9 @@ export class Reference {
      *
      * @see Container
      */
-    public constructor(id: string, invalidBehavior = ContainerError.EXCEPTION_ON_INVALID_REFERENCE, strict = true) {
+    public constructor(id: string, invalidBehavior = ContainerError.EXCEPTION_ON_INVALID_REFERENCE) {
         this.id = id.toLowerCase();
         this.invalidBehavior = invalidBehavior;
-        this.strict = strict;
     }
 
     /**

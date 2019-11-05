@@ -16,7 +16,7 @@ export class DelegatingLoader extends Loader {
      * @param resolver A ILoaderResolver instance.
      */
     constructor(resolver: ILoaderResolver) {
-        super(null);
+        super(null as any);
         this._resolver = resolver;
     }
 

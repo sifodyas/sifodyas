@@ -135,7 +135,7 @@ export abstract class Kernel implements IKernel {
      *
      * @returns A map of overridden parameters
      */
-    protected async getOverriddenParameters(container: Container): Promise<Map<KernelParametersKey | string, any>> {
+    protected async getOverriddenParameters(_container: Container): Promise<Map<KernelParametersKey | string, any>> {
         return new Map();
     }
 

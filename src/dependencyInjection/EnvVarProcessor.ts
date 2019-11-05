@@ -7,7 +7,7 @@ type GetEnvFunction = (name: string) => Promise<string>;
 export type EnvPrefix = 'base64' | 'boolean' | 'file' | 'float' | 'int' | 'json' | 'resolve' | 'string' | 'yml';
 
 export class EnvVarProcessor {
-    private systemEnvCaseResolver: Map<string, string> = new Map();
+    private systemEnvCaseResolver: Map<string, string | undefined> = new Map();
     public constructor(private container: Container) {
         if (process && process.env) {
             Object.keys(process.env).forEach(env => {
@@ -36,7 +36,7 @@ export class EnvVarProcessor {
             return (await Core.getResource(file)).content;
         }
 
-        let env: string = null;
+        let env: string | undefined;
         if (-1 !== i || prefix !== 'string') {
             env = await getEnvFunction(name);
             if (null === env) {
@@ -95,7 +95,7 @@ export class EnvVarProcessor {
         }
 
         if (prefix === 'resolve') {
-            return Core.replaceAsync(env, /%%|%([^%\s]+)%/, async (match, paramName) => {
+            return Core.replaceAsync(env, /%%|%([^%\s]+)%/, async (_, paramName) => {
                 if (!paramName) {
                     return '%';
                 }

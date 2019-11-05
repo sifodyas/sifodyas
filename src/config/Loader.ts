@@ -12,7 +12,7 @@ export abstract class Loader implements ILoader {
     protected static loading: Map<string, boolean> = new Map();
 
     protected container: Container;
-    protected _resolver: ILoaderResolver;
+    protected _resolver!: ILoaderResolver;
 
     public constructor(container: Container) {
         this.container = container;
@@ -87,7 +87,7 @@ export abstract class Loader implements ILoader {
 
             Loader.loading.set(resourceFile.path, true);
 
-            let ret = null;
+            let ret: void | null = null;
             try {
                 ret = await loader.load(resourceFile, type, external);
             } finally {

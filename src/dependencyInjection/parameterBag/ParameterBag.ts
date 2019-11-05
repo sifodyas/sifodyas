@@ -11,7 +11,8 @@ export class ParameterBag implements IParameterBag<unknown> {
     protected parameters: Map<string, unknown> = new Map();
     protected resolved: boolean = false;
 
-    constructor(parameters: Map<string, unknown> = new Map(), public container /* Container */ = null) {
+    // I saw what you did there !!!!
+    constructor(parameters: Map<string, unknown> = new Map(), public container: any /* Container */ = null) {
         parameters.forEach((value, key) => {
             this.parameters.set(key.toLowerCase(), value);
         });
@@ -19,7 +20,7 @@ export class ParameterBag implements IParameterBag<unknown> {
 
     private getComplex(name: string) {
         let ret: unknown = null; // tslint:disable-line:prefer-const
-        this.parameters.forEach((value, key) => {
+        this.parameters.forEach((_, key) => {
             if (name.startsWith(key)) {
                 try {
                     eval(`ret = value${name.replace(key, '')};`); // tslint:disable-line:no-eval
@@ -59,7 +60,7 @@ export class ParameterBag implements IParameterBag<unknown> {
             return this.resolved ? this.get(key) : (this.resolveValue(await this.get(key), resolving) as any);
         }
 
-        return Core.replaceAsync(value, /%%|%([^%\s]+)%/g, async (match, trouvaille, offset, str) => {
+        return Core.replaceAsync(value, /%%|%([^%\s]+)%/g, async (_, trouvaille) => {
             if (!trouvaille) {
                 return '%%';
             }
@@ -130,7 +131,7 @@ export class ParameterBag implements IParameterBag<unknown> {
             }
 
             const alternatives: string[] = [];
-            this.parameters.forEach((value, key) => {
+            this.parameters.forEach((_, key) => {
                 const lev = Core.levenshtein(lowerName, key);
                 if (lev <= lowerName.length / 3 || key.includes(lowerName)) {
                     alternatives.push(key);
