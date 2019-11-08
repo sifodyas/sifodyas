@@ -27,7 +27,7 @@ The contributing process need to be defined before being open.
 ## Todo
 - [ ] More tests
 - [ ] Switch IOC/DI system to [Inversify](https://github.com/inversify/InversifyJS)
-- [ ] Switch TypeScript to strict and 3.7 features
+- [x] Switch TypeScript to strict and 3.7 features
 
 ## License
 [MIT](LICENSE)
