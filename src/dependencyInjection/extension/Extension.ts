@@ -19,7 +19,7 @@ export abstract class Extension implements IExtension, IConfigurationExtension {
 
     protected processConfiguration<T>(configuration: IConfiguration, configs: T): T {
         return {
-            ...(this.processedConfig = configuration ? configuration.validateConfig(configs) : configs),
+            ...(this.processedConfig = configuration?.validateConfig(configs) ?? configs),
         };
     }
 
@@ -34,13 +34,10 @@ export abstract class Extension implements IExtension, IConfigurationExtension {
         }
     }
 
-    /** @inheritDoc */
     public abstract getConfiguration(config: object, container: Container): IConfiguration;
 
-    /** @inheritDoc */
     public abstract load(configs: object, container: Container): Promise<void>;
 
-    /** @inheritDoc */
     public getAlias() {
         const SUFFIX = 'Extension',
             SUFFIX_TRICK_LENGTH = -SUFFIX.length;

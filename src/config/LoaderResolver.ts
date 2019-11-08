@@ -22,7 +22,6 @@ export class LoaderResolver implements ILoaderResolver {
         }
     }
 
-    /** @inheritDoc */
     public resolve(resourceFile: ResourceFile, type: string = null) {
         for (const loader of this.loaders) {
             if (loader.supports(resourceFile, type)) {

@@ -11,7 +11,6 @@ import { Loader } from './Loader';
  */
 @Use(JsonBasedLoaderTrait)
 export class YamlLoader extends Loader {
-    /** @inheritDoc */
     public async load(
         this: YamlLoader & JsonBasedLoaderTrait,
         resourceFile: ResourceFile,
@@ -30,7 +29,6 @@ export class YamlLoader extends Loader {
         this.loadFromExtensions(content);
     }
 
-    /** @inheritDoc */
     public supports(resourceFile: ResourceFile, type?: string) {
         try {
             return ['yml', 'yaml'].includes(

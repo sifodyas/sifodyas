@@ -208,7 +208,7 @@ export class Container implements IContainer, IReset {
         id = String.prototype.toLowerCase.apply(id);
 
         if ('service_container' === id) {
-            return this as any;
+            return this;
         }
 
         return this._services.get(id);
@@ -480,9 +480,7 @@ export class MergeExtensionConfigurationContainer extends Container {
      */
     public registerExtension(extension: IExtension) {
         throw new LogicException(
-            `You cannot register extension "${extension.constructor.name}" from "${
-                this.extensionClass
-            }". Extension must be registered before the container is compiled.`,
+            `You cannot register extension "${extension.constructor.name}" from "${this.extensionClass}". Extension must be registered before the container is compiled.`,
         );
     }
 

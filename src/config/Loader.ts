@@ -34,10 +34,8 @@ export abstract class Loader implements ILoader {
         }
     }
 
-    /** @inheritDoc */
     public abstract async load(resourceFile: ResourceFile, type?: string): Promise<void>;
 
-    /** @inheritDoc */
     public abstract supports(resourceFile: ResourceFile, type?: string): boolean;
 
     /**

@@ -8,7 +8,6 @@ import { Loader } from './Loader';
  */
 @Use(JsonBasedLoaderTrait)
 export class JsonLoader extends Loader {
-    /** @inheritDoc */
     public async load(
         this: JsonLoader & JsonBasedLoaderTrait,
         resourceFile: ResourceFile,
@@ -27,7 +26,6 @@ export class JsonLoader extends Loader {
         this.loadFromExtensions(content);
     }
 
-    /** @inheritDoc */
     public supports(resourceFile: ResourceFile, type?: string) {
         return (
             ['js', 'json'].includes(String.prototype.toLowerCase.call(type || resourceFile.path.split('.').pop())) ||

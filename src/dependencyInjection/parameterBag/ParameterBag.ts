@@ -30,7 +30,7 @@ export class ParameterBag implements IParameterBag<unknown> {
             }
         });
 
-        return void 0 === ret ? null : ret;
+        return ret ?? null;
     }
 
     /**
@@ -92,26 +92,22 @@ export class ParameterBag implements IParameterBag<unknown> {
         });
     }
 
-    /** @inheritDoc */
     public clear() {
         this.parameters.clear();
     }
 
-    /** @inheritDoc */
     public add(parameters: Map<string, unknown>) {
         parameters.forEach((value, key) => {
             this.parameters.set(key.toLowerCase(), value);
         });
     }
 
-    /** @inheritDoc */
     public all(): Map<string, unknown> {
         return this.parameters;
     }
 
-    /** @inheritDoc */
     public async get(name: string) {
-        const lowerName = name ? name.toLowerCase() : '';
+        const lowerName = name?.toLowerCase() ?? '';
         if (!this.parameters.has(lowerName)) {
             if (!lowerName) {
                 throw new ParameterNotFoundException('Parameter name is empty !');
@@ -150,22 +146,18 @@ export class ParameterBag implements IParameterBag<unknown> {
         return this.parameters.get(lowerName);
     }
 
-    /** @inheritDoc */
     public remove(name: string) {
         this.parameters.delete(name);
     }
 
-    /** @inheritDoc */
     public set(name: string, value: unknown) {
         this.parameters.set(name.toLowerCase(), value);
     }
 
-    /** @inheritDoc */
     public has(name: string) {
         return this.parameters.has(name.toLowerCase());
     }
 
-    /** @inheritDoc */
     public async resolve() {
         if (this.resolved) {
             return;
@@ -186,7 +178,6 @@ export class ParameterBag implements IParameterBag<unknown> {
         this.resolved = true;
     }
 
-    /** @inheritDoc */
     public async resolveValue(value: unknown, resolving: Map<string, unknown> = new Map()) {
         if (Core.isString(value)) {
             return this.resolveString(value, resolving) as any;
@@ -228,7 +219,6 @@ export class ParameterBag implements IParameterBag<unknown> {
         return value;
     }
 
-    /** @inheritDoc */
     public escapeValue(value: unknown) {
         if (Core.isString(value)) {
             return value.replace(/%/g, '%%');
@@ -246,7 +236,6 @@ export class ParameterBag implements IParameterBag<unknown> {
         return value;
     }
 
-    /** @inheritDoc */
     public unescapeValue(value: unknown) {
         if (Core.isString(value)) {
             return value.replace(/%%/g, '%');

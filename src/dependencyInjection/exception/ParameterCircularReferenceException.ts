@@ -10,7 +10,7 @@ export class ParameterCircularReferenceException extends BaseException {
         super(
             `Circular reference detected for parameter "${parameters[0]}" ("${parameters.join('" > "')}" > "${
                 parameters[0]
-            }"). [${previous ? previous.message : ''}]`,
+            }"). [${previous?.message ?? ''}]`,
         );
 
         this._parameters = parameters;

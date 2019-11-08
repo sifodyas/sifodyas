@@ -20,7 +20,6 @@ export class DelegatingLoader extends Loader {
         this._resolver = resolver;
     }
 
-    /** @inheritDoc */
     public async load(resourceFile: ResourceFile, type?: string) {
         const loader = this.resolver.resolve(resourceFile, type);
         if (!loader) {
@@ -30,7 +29,6 @@ export class DelegatingLoader extends Loader {
         return loader.load(resourceFile, type);
     }
 
-    /** @inheritDoc */
     public supports(resourceFile: ResourceFile, type?: string) {
         return !this.resolver.resolve(resourceFile, type);
     }

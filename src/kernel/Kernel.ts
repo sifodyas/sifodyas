@@ -197,7 +197,6 @@ export abstract class Kernel implements IKernel {
         return new DelegatingLoader(resolver);
     }
 
-    /** @inheritDoc */
     public async boot(): Promise<any> {
         if (this.booted) {
             return;
@@ -233,7 +232,6 @@ export abstract class Kernel implements IKernel {
         });
     }
 
-    /** @inheritDoc */
     public async shutdown(): Promise<any> {
         if (!this.booted) {
             return;
@@ -269,7 +267,6 @@ export abstract class Kernel implements IKernel {
         return Promise.all(p);
     }
 
-    /** @inheritDoc */
     public async unregisterBundles(bundleNames: string[]): Promise<void> {
         if (!this.booted) {
             return;
@@ -305,26 +302,20 @@ export abstract class Kernel implements IKernel {
         }
     }
 
-    /** @inheritDoc */
     public abstract registerBundles(): BundleExtended[];
 
-    /** @inheritDoc */
     public abstract async registerContainerConfiguration(loader: ILoader): Promise<void>;
 
-    /** @inheritDoc */
     public getBundle(name: string): BundleExtended {
         if (!this.bundles.has(name)) {
             const message1 = `Bundle "${name}" does not exist or it is not enabled.`,
-                message2 = `Maybe you forgot to add it in the registerBundles() method of your ${
-                    this.constructor.name
-                }?`;
+                message2 = `Maybe you forgot to add it in the registerBundles() method of your ${this.constructor.name}?`;
             throw new InvalidArgumentException(`${message1} ${message2}`);
         }
 
         return this.bundles.get(name);
     }
 
-    /** @inheritDoc */
     public getName() {
         return (this.name = this.name || this.constructor.name);
     }

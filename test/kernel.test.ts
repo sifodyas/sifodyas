@@ -12,7 +12,7 @@ describe('Kernel', () => {
     });
 
     it('should create and boot properly a Kernel instance', async () => {
-        const kernel = new class TestKernel extends Kernel {
+        const kernel = new (class TestKernel extends Kernel {
             public async registerContainerConfiguration(loader: ILoader): Promise<void> {
                 return loader.load({ content: '{}', path: 'test.json' });
             }
@@ -20,7 +20,7 @@ describe('Kernel', () => {
             public registerBundles(): BundleExtended[] {
                 return [];
             }
-        }('test', true);
+        })('test', true);
 
         expect(await kernel.boot()).toHaveLength(0);
         expect(kernel.getName()).toEqual('TestKernel');
@@ -37,16 +37,15 @@ describe('Kernel', () => {
         //
     ].forEach(config =>
         it(`should load ${config}`, async () => {
-            const kernel = new class TestKernel extends TolerantKernel {
+            const kernel = new (class TestKernel extends TolerantKernel {
                 public async registerContainerConfiguration(loader: ILoader): Promise<void> {
-                    const resource = await Core.getResource(`${configRoot}/${config}`);
-                    return loader.load(resource);
+                    return loader.load(await Core.getResource(`${configRoot}/${config}`));
                 }
 
                 public registerBundles(): BundleExtended[] {
                     return [];
                 }
-            }('test', true);
+            })('test', true);
 
             await kernel.boot();
 
@@ -60,4 +59,32 @@ describe('Kernel', () => {
             });
         }),
     );
+
+    it('should fail loading unknown conf', async () => {
+        const kernel = new (class TestKernel extends Kernel {
+            public async registerContainerConfiguration(loader: ILoader): Promise<void> {
+                return loader.load(await Core.getResource(`${configRoot}/config_bundle.yaml`));
+            }
+
+            public registerBundles(): BundleExtended[] {
+                return [];
+            }
+        })('test', true);
+
+        await expect(kernel.boot()).rejects.toThrow();
+    });
+
+    it('should NOT fail loading unknown conf with Tolerant', async () => {
+        const kernel = new (class TestKernel extends TolerantKernel {
+            public async registerContainerConfiguration(loader: ILoader): Promise<void> {
+                return loader.load(await Core.getResource(`${configRoot}/config_bundle.yaml`));
+            }
+
+            public registerBundles(): BundleExtended[] {
+                return [];
+            }
+        })('test', true);
+
+        await expect(kernel.boot()).resolves.not.toThrow();
+    });
 });

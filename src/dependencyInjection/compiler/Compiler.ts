@@ -24,8 +24,9 @@ export class Compiler {
     private _optimizationPasses: ICompilerPass[][] = [];
     private _removingPasses: ICompilerPass[][] = [];
 
-    public static isPass(pass: any): pass is ICompilerPass {
-        return pass['process'] && typeof pass['process'] === 'function';
+    public static isPass(obj: any): obj is ICompilerPass {
+        const pass = obj as ICompilerPass;
+        return pass.process && typeof pass.process === 'function';
     }
 
     /**
@@ -76,7 +77,7 @@ export class Compiler {
      */
     public addPass(pass: ICompilerPass, type = CompilerPassType.TYPE_BEFORE_OPTIMIZATION, priority = 0) {
         const property = `_${type}Passes`;
-        const passes: ICompilerPass[][] = (this as any)[property];
+        const passes: ICompilerPass[][] = this[property];
         if (!passes) {
             throw new InvalidArgumentException(`Invalid type "${type}".`);
         }

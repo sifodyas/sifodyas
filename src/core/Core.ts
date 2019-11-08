@@ -37,8 +37,8 @@ export abstract class Core {
      * @returns The Levenshtein-Distance between the two argument strings or -1, if one of the argument strings is longer than the limit of 255 characters.
      */
     public static levenshtein(a: string, b: string): number {
-        const an = a ? a.length : 0;
-        const bn = b ? b.length : 0;
+        const an = a?.length ?? 0;
+        const bn = b?.length ?? 0;
         if (an === 0) {
             return bn;
         }
@@ -147,7 +147,7 @@ export abstract class Core {
      * @param str The string to converts.
      * @returns The string converted.
      */
-    public static toSnakeCase(str: string): string {
+    public static toSnakeCase(str: string) {
         return str.replace(/\.?([A-Z]+)/g, (_, y) => `_${y.toLowerCase()}`).replace(/^_/, '');
     }
 
@@ -179,7 +179,7 @@ export abstract class Core {
      */
     public static isMap<K, V>(x: any): x is Map<K, V> {
         const map = x as Map<K, V>;
-        return !!map && map.entries !== undefined && map.delete !== undefined;
+        return map?.entries !== undefined && map.delete !== undefined;
     }
 
     /**

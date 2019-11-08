@@ -18,22 +18,18 @@ export class FrozenParameterBag extends ParameterBag {
         this.resolved = true;
     }
 
-    /** @inheritDoc */
     public clear() {
         throw new LogicException('Impossible to call clear() on a frozen ParameterBag.');
     }
 
-    /** @inheritDoc */
     public add(_parameters: Map<string, unknown>) {
         throw new LogicException('Impossible to call add() on a frozen ParameterBag.');
     }
 
-    /** @inheritDoc */
     public set(_name: string, _value: unknown) {
         throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
 
-    /** @inheritDoc */
     public remove(_name: string) {
         throw new LogicException('Impossible to call remove() on a frozen ParameterBag.');
     }

@@ -23,25 +23,6 @@ export interface IBundle {
     build(container: Container): void;
 
     /**
-     * Returns the bundle name that this bundle overrides.
-     * Remember that you need to add it to the dependencies too.
-     *
-     * Despite is name, this method does not imply any parent/child relationship between the bundles, just a way to
-     * extend and override an existing bundle.
-     *
-     * @returns The Bundle name it overrides or null if no parent.
-     */
-    getParent(): string;
-
-    /**
-     * Returns the bundles names that this bundle depends on.
-     *
-     * @returns An array of Bundle name or null if no dependency.
-     * @WIP
-     */
-    getDependencies(): string[];
-
-    /**
      * Returns the bundle name.
      */
     getName(): string;

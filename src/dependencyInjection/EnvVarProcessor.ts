@@ -9,7 +9,7 @@ export type EnvPrefix = 'base64' | 'boolean' | 'file' | 'float' | 'int' | 'json'
 export class EnvVarProcessor {
     private systemEnvCaseResolver: Map<string, string | undefined> = new Map();
     public constructor(private container: Container) {
-        if (process && process.env) {
+        if (process?.env) {
             Object.keys(process.env).forEach(env => {
                 this.systemEnvCaseResolver.set(env.toLowerCase(), process.env[env]);
             });
@@ -42,7 +42,7 @@ export class EnvVarProcessor {
             if (null === env) {
                 return;
             }
-        } else if (process && process.env && name in process.env) {
+        } else if (name in process?.env ?? {}) {
             env = process.env[name];
         } else if (window && `ENV_${name}` in window) {
             env = window[`ENV_${name}`];
