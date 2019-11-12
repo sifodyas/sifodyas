@@ -22,7 +22,7 @@ export class LoaderResolver implements ILoaderResolver {
         }
     }
 
-    public resolve(resourceFile: ResourceFile, type: string = null) {
+    public resolve(resourceFile: ResourceFile, type?: string) {
         for (const loader of this.loaders) {
             if (loader.supports(resourceFile, type)) {
                 return loader;

@@ -17,7 +17,7 @@ interface ImportConfigObject {
  * Trait for loaders that gives Json for output.
  */
 export class JsonBasedLoaderTrait extends Trait {
-    private isExternalResource(path: string): boolean {
+    private isExternalResource(path: string) {
         return /^https?:\/\//i.test(path);
     }
 

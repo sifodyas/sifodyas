@@ -1,5 +1,12 @@
 # Upgrade
 
+## `v2.0.0` to `v2.1.0`
+### Bundles
+- "Parents & dependencies" features will not be added. You can safely remove related methods.
+
+### Kernel
+- `boot` and `shutdown` methods does not longer return something. (they return `Promise<void>` now)
+
 ## `v1.7` to `v2.0.0`
 ### Global changes
 - Sifodyas now supports env var in config files: (basic usage in yaml) `key: %env(MY_ENV_VAR)%`.

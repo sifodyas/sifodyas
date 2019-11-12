@@ -22,7 +22,7 @@ describe('Kernel', () => {
             }
         })('test', true);
 
-        expect(await kernel.boot()).toHaveLength(0);
+        await expect(kernel.boot()).resolves.not.toThrow();
         expect(kernel.getName()).toEqual('TestKernel');
         expect(kernel['container']).not.toBeNull();
         expect(kernel['booted']).toBeTruthy();

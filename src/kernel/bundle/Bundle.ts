@@ -14,20 +14,16 @@ abstract class AbstractBundle implements IBundle {
 
     public abstract async shutdown(): Promise<any>;
 
-    public build(_container: Container): void {}
-
-    public getParent(): string {
-        return null as any;
-    }
+    public build(_container: Container) {}
 
     public getName() {
-        return (this.name = this.name || this.constructor.name);
+        return (this.name = this.name ?? this.constructor.name);
     }
 
     public abstract getNamespace(): string;
 
     public getContainerExtension(): IExtension {
-        return null as any;
+        return null;
     }
 
     public isCore() {

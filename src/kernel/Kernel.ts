@@ -115,7 +115,7 @@ export abstract class Kernel implements IKernel {
             }
         });
 
-        const parameters: Map<KernelParametersKey | string, any> = new Map();
+        const parameters: Map<KernelParametersKey | string, unknown> = new Map();
 
         parameters.set('kernel.boot.sync', false);
         parameters.set('kernel.unregister.parallel', true);
@@ -197,7 +197,7 @@ export abstract class Kernel implements IKernel {
         return new DelegatingLoader(resolver);
     }
 
-    public async boot(): Promise<any> {
+    public async boot() {
         if (this.booted) {
             return;
         }
@@ -226,13 +226,10 @@ export abstract class Kernel implements IKernel {
             }
         }
 
-        return Promise.all(p).then(data => {
-            this.booted = true;
-            return data;
-        });
+        Promise.all(p).then(() => (this.booted = true));
     }
 
-    public async shutdown(): Promise<any> {
+    public async shutdown() {
         if (!this.booted) {
             return;
         }
@@ -264,7 +261,7 @@ export abstract class Kernel implements IKernel {
             }
         }
 
-        return Promise.all(p);
+        Promise.all(p);
     }
 
     public async unregisterBundles(bundleNames: string[]): Promise<void> {

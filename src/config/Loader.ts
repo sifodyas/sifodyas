@@ -43,7 +43,7 @@ export abstract class Loader implements ILoader {
      *
      * @returns A ILoaderResolver instance.
      */
-    public get resolver(): ILoaderResolver {
+    public get resolver() {
         return this._resolver;
     }
 
@@ -68,12 +68,7 @@ export abstract class Loader implements ILoader {
      * @throws FileLoaderImportCircularReferenceException
      * @async
      */
-    public async import(
-        resourceFile: ResourceFile,
-        type?: string,
-        ignoreErrors: boolean = false,
-        external: boolean = false,
-    ): Promise<any> {
+    public async import(resourceFile: ResourceFile, type?: string, ignoreErrors = false, external = false) {
         try {
             const loader = this.resolve(resourceFile, type);
 

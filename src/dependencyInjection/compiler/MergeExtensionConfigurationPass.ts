@@ -7,9 +7,6 @@ import { ICompilerPass } from './ICompilerPass';
 export class MergeExtensionConfigurationPass implements ICompilerPass {
     constructor(private extensions: string[]) {}
 
-    /**
-     * @inheritdoc
-     */
     public async process(container: Container) {
         // HttpKernel/DependencyInjection/MergeExtensionConfigurationPass.process
         this.extensions.forEach(name => {

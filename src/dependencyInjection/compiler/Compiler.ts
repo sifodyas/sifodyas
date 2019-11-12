@@ -2,7 +2,7 @@ import { Container } from '../Container';
 import { InvalidArgumentException } from '../exception';
 import { ICompilerPass } from './ICompilerPass';
 
-export const enum CompilerPassType {
+export enum CompilerPassType {
     TYPE_AFTER_REMOVING = 'afterRemoving',
     TYPE_BEFORE_OPTIMIZATION = 'beforeOptimization',
     TYPE_BEFORE_REMOVING = 'beforeRemoving',
@@ -157,7 +157,7 @@ export class Compiler {
      * Gets the Merge pass.
      */
     public get mergePass() {
-        return this._mergePass as ICompilerPass;
+        return this._mergePass;
     }
     /**
      * Sets the Merge pass.

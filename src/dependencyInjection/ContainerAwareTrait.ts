@@ -12,7 +12,7 @@ export class ContainerAwareTrait extends Trait {
      *
      * @param container A Container instance or null.
      */
-    public setContainer(container: Container): void {
+    public setContainer(container: Container) {
         this.container = container;
     }
 }

@@ -11,20 +11,13 @@ export interface IKernel {
      * Boot the current Kernel.
      * @async
      */
-    boot(): Promise<any>;
+    boot(): Promise<void>;
 
     /**
      * Shutdowns the Kernel.
      * @async
      */
-    shutdown(): Promise<any>;
-
-    /**
-     * Unregister an array of bundles.
-     *
-     * @param bundleNames The list of bundles to unregister.
-     */
-    unregisterBundles(bundleNames: string[]): void;
+    shutdown(): Promise<void>;
 
     /**
      * Loads the container configuration.
@@ -41,14 +34,20 @@ export interface IKernel {
     registerBundles(): BundleExtended[];
 
     /**
-     * Return a Bundle and optionally its descendants by its name.
+     * Unregister an array of bundles.
+     *
+     * @param bundleNames The list of bundles to unregister.
+     */
+    unregisterBundles(bundleNames: string[]): void;
+
+    /**
+     * Return a Bundle by its name.
      *
      * @param name Bundle name.
-     * @param first Whether to return the first bundle only or together with its descendants.
      * @returns A Bundle instance.
      * @throws InvalidArgumentException when the bundle is not enabled.
      */
-    getBundle(name: string, first: boolean): BundleExtended | BundleExtended[];
+    getBundle(name: string): BundleExtended;
 
     /**
      * Gets the name of the kernel.

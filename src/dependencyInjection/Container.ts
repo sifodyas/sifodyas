@@ -358,9 +358,6 @@ export class Container implements IContainer, IReset {
         return this;
     }
 
-    /**
-     * @inheritdoc
-     */
     public reset() {
         const services = new Map(this._services.entries());
         this._services.clear();
@@ -475,25 +472,16 @@ export class MergeExtensionConfigurationContainer extends Container {
         this.extensionClass = extension.constructor.name;
     }
 
-    /**
-     * @inheritdoc
-     */
     public registerExtension(extension: IExtension) {
         throw new LogicException(
             `You cannot register extension "${extension.constructor.name}" from "${this.extensionClass}". Extension must be registered before the container is compiled.`,
         );
     }
 
-    /**
-     * @inheritdoc
-     */
     public async compile(_resolveEnvPlaceholders = false) {
         throw new LogicException(`Cannot compile the container in extension "${this.extensionClass}".`);
     }
 
-    /**
-     * @inheritdoc
-     */
     public async resolveEnvs<T extends any[] | Map<string, any> | string>(
         value: T,
         format = false,
