@@ -1,0 +1,14 @@
+{
+  "name": "@sifodyas/yaml-loader",
+  "version": "1.0.0",
+  "description": "Add YamlLoader to Sifodyas",
+  "main": "dist/indes.js",
+  "license": "MIT",
+  "dependencies": {
+    "@bios21/tstrait": "^1.1.0",
+    "yamljs": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@sifodyas/sifodyas": "^2"
+  }
+}

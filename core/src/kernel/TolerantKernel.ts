@@ -1,8 +1,6 @@
 import { DelegatingLoader } from '../config/DelegatingLoader';
 import { ILoader } from '../config/ILoader';
-import { JsonLoader } from '../config/JsonLoader';
 import { LoaderResolver } from '../config/LoaderResolver';
-import { YamlLoader } from '../config/YamlLoader';
 import { Container } from '../dependencyInjection/Container';
 import { Kernel, KernelParametersKey } from './Kernel';
 
@@ -16,7 +14,7 @@ import { Kernel, KernelParametersKey } from './Kernel';
 export abstract class TolerantKernel extends Kernel {
     protected getContainerLoader(container: Container): ILoader {
         const resolver = new (class TolerantLoaderResolver extends LoaderResolver {
-            public addLoader(loader: ILoader): void {
+            public addLoader(loader: ILoader) {
                 const tmpLoadMethod = loader.load.bind(loader);
                 loader.load = async (resource: any, type?: string) => {
                     try {
@@ -29,7 +27,7 @@ export abstract class TolerantKernel extends Kernel {
                 };
                 super.addLoader(loader);
             }
-        })([new YamlLoader(container), new JsonLoader(container)]);
+        })(this.loaders.map(l => new (l as any)(container)));
 
         return new DelegatingLoader(resolver);
     }

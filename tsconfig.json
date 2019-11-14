@@ -17,9 +17,19 @@
     "strict": true,
     "strictNullChecks": false,
     "target": "es2015",
+    "resolveJsonModule": true,
     "lib": [
       "dom",
       "esnext"
-    ]
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@sifodyas/sifodyas": [
+        "core/src/"
+      ],
+      "@sifodyas/yaml-loader": [
+        "lib/plugins/yaml-loader/"
+      ]
+    }
   }
 }

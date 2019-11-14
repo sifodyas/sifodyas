@@ -1,0 +1,46 @@
+{
+  "name": "@sifodyas/sifodyas",
+  "version": "2.1.0-dev.5",
+  "description": "Bring the famous bundle / kernel logic to Javascript",
+  "repository": {
+    "url": "git@github.com:sifodyas/sifodyas.git",
+    "directory": "lib/sifodyas",
+    "type": "git"
+  },
+  "bugs": {
+    "email": "lisag+sifodyas@wynd.eu",
+    "url": "https://github.com/sifodyas/sifodyas/issues"
+  },
+  "homepage": "https://github.com/sifodyas/sifodyas",
+  "keywords": [
+    "sifodyas",
+    "di",
+    "dependency-injection",
+    "typescript",
+    "typescript-library",
+    "bundle-container"
+  ],
+  "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "UPGRADE.md"
+  ],
+  "scripts": {
+    "_webpack": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack --config config/webpack/webpack.config.ts",
+    "_webpack-dev-server": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack-dev-server --progress --env.development --env.watch --config config/webpack/webpack.config.ts",
+    "clean": "rimraf dist/*",
+    "prebuild": "yarn clean",
+    "build": "yarn _webpack --env.production -p --config-name build",
+    "build:dev": "yarn prebuild && yarn _webpack --env.development --config-name build"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "dependencies": {
+    "@bios21/tstrait": "^1.1.0",
+    "lodash": "^4.17.15"
+  }
+}

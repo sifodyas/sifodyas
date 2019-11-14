@@ -1,8 +1,8 @@
+import { Loader } from '../config';
 import { DelegatingLoader } from '../config/DelegatingLoader';
 import { ILoader } from '../config/ILoader';
 import { JsonLoader } from '../config/JsonLoader';
 import { LoaderResolver } from '../config/LoaderResolver';
-import { YamlLoader } from '../config/YamlLoader';
 import { Core } from '../core/Core';
 import { Compiler, CompilerPassType, MergeExtensionConfigurationPass } from '../dependencyInjection/compiler';
 import { Container } from '../dependencyInjection/Container';
@@ -51,6 +51,8 @@ export abstract class Kernel implements IKernel {
     protected name: string;
     protected booted = false;
     protected container: Container;
+
+    protected loaders: Array<typeof Loader> = [JsonLoader];
 
     constructor(protected environment: string, protected debug: boolean) {}
 
@@ -192,7 +194,7 @@ export abstract class Kernel implements IKernel {
      * @returns The loader.
      */
     protected getContainerLoader(container: Container): ILoader {
-        const resolver = new LoaderResolver([new YamlLoader(container), new JsonLoader(container)]);
+        const resolver = new LoaderResolver(this.loaders.map(l => new (l as any)(container)));
 
         return new DelegatingLoader(resolver);
     }

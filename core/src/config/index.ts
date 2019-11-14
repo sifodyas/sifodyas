@@ -8,4 +8,3 @@ export * from './JsonBasedLoaderTrait';
 export * from './JsonLoader';
 export * from './Loader';
 export * from './LoaderResolver';
-export * from './YamlLoader';

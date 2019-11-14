@@ -29,7 +29,8 @@ export class JsonLoader extends Loader {
     public supports(resourceFile: ResourceFile, type?: string) {
         return (
             ['js', 'json'].includes(String.prototype.toLowerCase.call(type || resourceFile.path.split('.').pop())) ||
-            (resourceFile.content.startsWith('{') || resourceFile.content.startsWith('['))
+            resourceFile.content.startsWith('{') ||
+            resourceFile.content.startsWith('[')
         );
     }
 }

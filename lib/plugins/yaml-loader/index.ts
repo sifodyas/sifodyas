@@ -1,8 +1,6 @@
 import { Use } from '@bios21/tstrait';
+import { JsonBasedLoaderTrait, Loader, ResourceFile } from '@sifodyas/sifodyas';
 import YAML from 'yamljs';
-import { ResourceFile } from '../core/Core';
-import { JsonBasedLoaderTrait } from './JsonBasedLoaderTrait';
-import { Loader } from './Loader';
 
 /**
  * YamlLoader loads YAML files service definitions.

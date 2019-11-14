@@ -1,4 +1,15 @@
-import { Bundle, BundleExtended, Core, Extension, IConfiguration, ILoader, Kernel, TolerantKernel } from '../src';
+import {
+    Bundle,
+    BundleExtended,
+    Core,
+    Extension,
+    IConfiguration,
+    ILoader,
+    JsonLoader,
+    Kernel,
+    TolerantKernel,
+} from '@sifodyas/sifodyas';
+import { YamlLoader } from '@sifodyas/yaml-loader';
 import { Utils } from './__utils__/Utils';
 
 const ENV_VAR_MOCK = 'ENV_VAR_MOCK';
@@ -12,6 +23,7 @@ describe('Bundle', () => {
 
     beforeEach(() => {
         kernel = new (class TestKernel extends TolerantKernel {
+            public loaders = [YamlLoader, JsonLoader];
             public async registerContainerConfiguration(loader: ILoader): Promise<void> {
                 const resource = await Core.getResource(`${Utils.configRoot}/config_bundle.yaml`);
                 return loader.load(resource);
