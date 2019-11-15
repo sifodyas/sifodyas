@@ -5,7 +5,9 @@
   "scripts": {
     "lint": "tslint --project tsconfig.json -c tslint.json '{core,lib}/**/src/**/*.ts*'",
     "lint:test": "tslint --project test/tsconfig.json -c tslint.json 'test/**/*.ts*'",
-    "lint:fix": "yarn lint --fix && yarn lint:test --fix"
+    "lint:fix": "yarn lint --fix && yarn lint:test --fix",
+    "w": "yarn workspace",
+    "ws": "yarn workspaces"
   },
   "private": true,
   "workspaces": [

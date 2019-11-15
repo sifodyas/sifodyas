@@ -3,15 +3,14 @@
 // tslint:disable:no-default-export
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import webpack from 'webpack';
 import VisualizerPlugin from 'webpack-visualizer-plugin';
-import { banner, DtsBanner, externals } from '../scripts/webpack-utils';
+import { banner, DtsBanner, externals } from '../../scripts/webpack-utils';
+import packageJson from '../package.json';
 
-const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'), { encoding: 'utf-8' }));
-const ROOT_APP_PATH = path.resolve(__dirname);
+const ROOT_APP_PATH = path.resolve(__dirname, '../');
 
 export interface WebpackEnvParam {
     production?: boolean;
@@ -53,7 +52,7 @@ export default function webpackConfig(environment: WebpackEnvParam): webpack.Con
         entry: {
             app: `${ROOT_APP_PATH}/src/index.ts`,
         },
-        externals: [...externals(), ...externals(packageJson)],
+        externals: [...externals(), ...externals(path.resolve(__dirname, '../'))],
         output: {
             path: `${ROOT_APP_PATH}/dist`,
             filename: 'index.js',

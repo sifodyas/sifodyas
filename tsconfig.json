@@ -21,15 +21,6 @@
     "lib": [
       "dom",
       "esnext"
-    ],
-    "baseUrl": "./",
-    "paths": {
-      "@sifodyas/sifodyas": [
-        "core/src/"
-      ],
-      "@sifodyas/yaml-loader": [
-        "lib/plugins/yaml-loader/"
-      ]
-    }
+    ]
   }
 }

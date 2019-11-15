@@ -5,7 +5,7 @@ import webpack from 'webpack';
 
 export const ROOT_WORKSPACE = path.resolve(__dirname, '..');
 export const WORKSPACE_PACKAGE_JSON = JSON.parse(
-    fs.readFileSync(path.resolve(__dirname, 'package.json'), { encoding: 'utf-8' }),
+    fs.readFileSync(path.resolve(ROOT_WORKSPACE, 'package.json'), { encoding: 'utf-8' }),
 );
 
 /**
@@ -14,7 +14,7 @@ export const WORKSPACE_PACKAGE_JSON = JSON.parse(
  */
 export function externals(pkgFolder?: string): string[] {
     let pkg = WORKSPACE_PACKAGE_JSON;
-    if (pkgFolder && pkgFolder.startsWith('/')) {
+    if (pkgFolder?.startsWith('/')) {
         pkg = require(path.resolve(pkgFolder, 'package.json'));
     }
 
@@ -49,7 +49,7 @@ export class DtsBanner implements webpack.Plugin {
     constructor(private outputFolder: string) {}
     public apply(compiler: webpack.Compiler) {
         compiler.hooks.done.tap('DtsBanner', () => {
-            glob(path.resolve(this.outputFolder, '**/*.d.ts'), (err, matches) => {
+            glob(path.resolve(this.outputFolder, '**/*.d.ts'), (_err, matches) => {
                 for (const filePath of matches) {
                     fs.writeFileSync(filePath, `${banner}\n\n${fs.readFileSync(filePath, { encoding: 'utf-8' })}`, {
                         encoding: 'utf-8',

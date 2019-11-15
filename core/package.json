@@ -4,7 +4,7 @@
   "description": "Bring the famous bundle / kernel logic to Javascript",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",
-    "directory": "lib/sifodyas",
+    "directory": "core",
     "type": "git"
   },
   "bugs": {
@@ -21,7 +21,7 @@
     "bundle-container"
   ],
   "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -29,8 +29,7 @@
     "UPGRADE.md"
   ],
   "scripts": {
-    "_webpack": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack --config config/webpack/webpack.config.ts",
-    "_webpack-dev-server": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack-dev-server --progress --env.development --env.watch --config config/webpack/webpack.config.ts",
+    "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
     "clean": "rimraf dist/*",
     "prebuild": "yarn clean",
     "build": "yarn _webpack --env.production -p --config-name build",
