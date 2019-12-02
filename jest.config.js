@@ -3,7 +3,7 @@ const { pathsToModuleNameMapper } = require('ts-jest/utils');
 const path = require('path');
 const fs = require('fs');
 
-const tsconfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, './tsconfig.json'), { encoding: 'utf-8' }));
+const tsconfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, './test/tsconfig.json'), { encoding: 'utf-8' }));
 const moduleNameMapper = pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
     prefix: '<rootDir>',
 });

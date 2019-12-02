@@ -166,6 +166,15 @@ export abstract class Kernel implements IKernel {
     }
 
     /**
+     * The extension point similar to the Bundle.build() static method.
+     *
+     * Use this method to register compiler passes and manipulate the container during the building process.
+     *
+     * @param container A Container instance.
+     */
+    protected build(_container: Container) {}
+
+    /**
      * Prepares the Container before it is compiled.
      *
      * @param container A Container instance.
@@ -182,6 +191,8 @@ export abstract class Kernel implements IKernel {
             }
         }
         orderedBundleNames.forEach(name => this.bundles.get(name).build(container));
+
+        this.build(container);
 
         container.getCompiler().mergePass = new MergeExtensionConfigurationPass(extensions);
     }
