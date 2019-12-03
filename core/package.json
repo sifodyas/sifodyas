@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/sifodyas",
-  "version": "2.1.0-dev.5",
+  "version": "2.1.0-dev.7",
   "description": "Bring the famous bundle / kernel logic to Javascript",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",
@@ -32,11 +32,7 @@
     "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
     "clean": "rimraf dist/*",
     "prebuild": "yarn clean",
-    "build": "yarn _webpack --env.production -p --config-name build",
-    "build:dev": "yarn prebuild && yarn _webpack --env.development --config-name build"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "build": "yarn _webpack"
   },
   "dependencies": {
     "@bios21/tstrait": "^1.1.0",

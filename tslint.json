@@ -3,6 +3,12 @@
     "@wynd/tslint-config-wynd"
   ],
   "rules": {
-    "no-boolean-literal-compare": false
+    "no-boolean-literal-compare": false,
+    "no-object-literal-type-assertion": [
+      true,
+      {
+        "allow-arguments": true
+      }
+    ]
   }
 }

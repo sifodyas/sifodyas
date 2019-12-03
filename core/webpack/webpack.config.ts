@@ -13,8 +13,6 @@ import packageJson from '../package.json';
 const ROOT_APP_PATH = path.resolve(__dirname, '../');
 
 export interface WebpackEnvParam {
-    production?: boolean;
-    development?: boolean;
     watch?: boolean;
 }
 
@@ -38,10 +36,10 @@ Object.entries(definedConst).forEach(([key, value]) => {
 
 console.info(`\x1b[4m\x1b[36mBUILD ${packageJson.name} FOR ${packageJson.version}\x1b[0m`);
 
-export default function webpackConfig(environment: WebpackEnvParam): webpack.Configuration {
+export default function webpackConfig(environment?: WebpackEnvParam): webpack.Configuration {
     return {
         devtool: 'source-map',
-        mode: environment.production ? 'production' : 'development',
+        mode: 'production',
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         },
@@ -72,7 +70,7 @@ export default function webpackConfig(environment: WebpackEnvParam): webpack.Con
                             loader: 'ts-loader',
                             options: {
                                 configFile: `${ROOT_APP_PATH}/src/tsconfig.json`, // TSL,
-                                transpileOnly: environment.watch,
+                                transpileOnly: !!environment?.watch,
                                 experimentalWatchApi: true,
                             },
                         },
@@ -82,14 +80,10 @@ export default function webpackConfig(environment: WebpackEnvParam): webpack.Con
         },
         plugins: [
             new webpack.DefinePlugin(definedConst),
-            ...(environment.development
-                ? [
-                      new VisualizerPlugin(),
-                      new CircularDependencyPlugin({
-                          allowAsyncCycles: false,
-                      }),
-                  ]
-                : []),
+            new VisualizerPlugin(),
+            new CircularDependencyPlugin({
+                allowAsyncCycles: false,
+            }),
             new ForkTsCheckerWebpackPlugin({
                 async: false,
                 useTypescriptIncrementalApi: true,
