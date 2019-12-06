@@ -54,9 +54,9 @@ describe('Kernel', () => {
 
             const container: Container = kernel['container'];
 
-            expect(await container.getParameter('foo')).toEqual('bar');
-            expect(await container.getParameter('bar')).toEqual(ENV_VAR_MOCK);
-            expect(await container.getParameter('baz')).toEqual({
+            expect(container.getParameter('foo')).toEqual('bar');
+            expect(container.getParameter('bar')).toEqual(ENV_VAR_MOCK);
+            expect(container.getParameter('baz')).toEqual({
                 bar: 'baz',
                 foo: 'bar',
             });

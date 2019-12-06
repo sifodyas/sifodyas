@@ -14,11 +14,11 @@ import { ParameterBag } from './parameterBag/ParameterBag';
 
 // tslint:disable
 type ReturnParameterType<KEY> = KEY extends 'kernel.boot.sync' | 'kernel.unregister.parallel' | 'kernel.debug'
-    ? Promise<boolean> : KEY extends 'kernel.environment'
-    ? Promise<'dev' | 'prod'> : KEY extends 'kernel.name' | 'kernel.version' | 'kernel.path'
-    ? Promise<string> : KEY extends 'kernel.bundles' | 'kernel.coreBundles'
-    ? Promise<string[]> : KEY extends KernelParametersKey
-    ? Promise<unknown> : Promise<any>;
+    ? boolean : KEY extends 'kernel.environment'
+    ? 'dev' | 'prod' : KEY extends 'kernel.name' | 'kernel.version' | 'kernel.path'
+    ? string : KEY extends 'kernel.bundles' | 'kernel.coreBundles'
+    ? string[] : KEY extends KernelParametersKey
+    ? unknown : any;
 type ReturnServiceType<T> = T extends 'kernel' ? Kernel : T extends 'service_container' ? Container : unknown;
 // tslint:enable
 
@@ -80,7 +80,7 @@ export class Container implements IContainer, IReset {
      *
      * @throws {EnvNotFoundException} When the environment variable is not found and has no default value
      */
-    protected async getEnv(name: string) {
+    protected getEnv(name: string) {
         const envName = `env(${name})`;
         if (this.resolving.has(envName)) {
             throw new ParameterCircularReferenceException(Array.from(this.resolving.keys()));
@@ -108,7 +108,7 @@ export class Container implements IContainer, IReset {
         }
 
         this.resolving.set(envName, true);
-        const ret = (await processor.getEnv(prefix, localName, this.getEnv.bind(this))) as string;
+        const ret = processor.getEnv(prefix, localName, this.getEnv.bind(this)) as string;
         this.envCache.set(name, ret);
         this.resolving.delete(envName);
         return ret;
@@ -117,8 +117,8 @@ export class Container implements IContainer, IReset {
     /**
      * Formerly known as ContainerBuilder.gerEnv
      */
-    protected async getEnvBuilder(name: string) {
-        const value = await this.getEnv(name);
+    protected getEnvBuilder(name: string) {
+        const value = this.getEnv(name);
         const bag = this.parameterBag;
 
         if (!Core.isString(value)) {
@@ -228,13 +228,13 @@ export class Container implements IContainer, IReset {
      * @returns The parameter value
      * @throws ParameterNotFoundException if the parameter is not defined.
      */
-    public getParameter(name: 'kernel.boot.sync' | 'kernel.unregister.parallel' | 'kernel.debug'): Promise<boolean>;
-    public getParameter(name: 'kernel.environment'): Promise<'dev' | 'prod'>;
-    public getParameter(name: 'kernel.name' | 'kernel.version' | 'kernel.path'): Promise<string>;
-    public getParameter(name: 'kernel.bundles' | 'kernel.coreBundles'): Promise<string[]>;
-    public getParameter(name: KernelParametersKey): Promise<unknown>;
+    public getParameter(name: 'kernel.boot.sync' | 'kernel.unregister.parallel' | 'kernel.debug'): boolean;
+    public getParameter(name: 'kernel.environment'): 'dev' | 'prod';
+    public getParameter(name: 'kernel.name' | 'kernel.version' | 'kernel.path'): string;
+    public getParameter(name: 'kernel.bundles' | 'kernel.coreBundles'): string[];
+    public getParameter(name: KernelParametersKey): unknown;
     public getParameter<KEY extends KernelParametersKey | string>(name: KEY): ReturnParameterType<KEY>;
-    public async getParameter(name: string): Promise<any> {
+    public getParameter(name: string): any {
         return this._parameterBag.get(name);
     }
 
@@ -381,16 +381,16 @@ export class Container implements IContainer, IReset {
         return this._services.has(id);
     }
 
-    public async resolveEnvs(value: any, format = false, usedEnvs: Map<string, string> = new Map()): Promise<any> {
+    public resolveEnvs(value: any, format = false, usedEnvs: Map<string, string> = new Map()): any {
         const bag = this.parameterBag;
         if (format) {
-            value = await bag.resolveValue(value);
+            value = bag.resolveValue(value);
         }
 
         if (Core.isArray<any>(value)) {
             const result = [];
             for (const k in value) {
-                result[k] = await this.resolveEnvs(value[k], format, usedEnvs);
+                result[k] = this.resolveEnvs(value[k], format, usedEnvs);
             }
 
             return result;
@@ -399,7 +399,7 @@ export class Container implements IContainer, IReset {
         if (Core.isMap(value)) {
             const result = new Map();
             for (const [k, v] of value.entries()) {
-                result.set(k, await this.resolveEnvs(v, format, usedEnvs));
+                result.set(k, this.resolveEnvs(v, format, usedEnvs));
             }
 
             return result;
@@ -408,7 +408,7 @@ export class Container implements IContainer, IReset {
         if (Core.isPureObject(value)) {
             const result = {};
             for (const k of Object.keys(value)) {
-                result[k] = await this.resolveEnvs(value[k], format, usedEnvs);
+                result[k] = this.resolveEnvs(value[k], format, usedEnvs);
             }
 
             return result;
@@ -419,11 +419,11 @@ export class Container implements IContainer, IReset {
         }
 
         const env = value as string;
-        const resolved = format ? bag.escapeValue(await this.getEnvBuilder(env)) : `%%env(${env})%%`;
+        const resolved = format ? bag.escapeValue(this.getEnvBuilder(env)) : `%%env(${env})%%`;
 
         if (!Core.isString(resolved) && !Core.isNumber(resolved)) {
             throw new RuntimeException(
-                `A string value must be composed of strings and/or numbers, but found paramter "env(${env})" of type ${typeof resolved} inside string value "${await this.resolveEnvs(
+                `A string value must be composed of strings and/or numbers, but found paramter "env(${env})" of type ${typeof resolved} inside string value "${this.resolveEnvs(
                     env,
                 )}".`,
             );

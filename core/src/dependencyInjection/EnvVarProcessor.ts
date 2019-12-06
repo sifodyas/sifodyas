@@ -1,9 +1,8 @@
-import YAML from 'yamljs';
 import { Core } from '../core';
 import { Container } from './Container';
 import { EnvNotFoundException, RuntimeException } from './exception';
 
-type GetEnvFunction = (name: string) => Promise<string>;
+type GetEnvFunction = (name: string) => string;
 export type EnvPrefix = 'base64' | 'boolean' | 'file' | 'float' | 'int' | 'json' | 'resolve' | 'string' | 'yml';
 
 export class EnvVarProcessor {
@@ -24,21 +23,22 @@ export class EnvVarProcessor {
         }
     }
 
-    public async getEnv(prefix: EnvPrefix, name: string, getEnvFunction: GetEnvFunction): Promise<unknown> {
+    public getEnv(prefix: EnvPrefix, name: string, getEnvFunction: GetEnvFunction): unknown {
         const i = name.indexOf(':');
 
-        if (prefix === 'file') {
-            const file = await getEnvFunction(name);
-            if (!Core.isScalar(file)) {
-                throw new RuntimeException(`Invalid file url: env var "${name}" is non-scalar.`);
-            }
+        // TODO: Handle without async
+        // if (prefix === 'file') {
+        //     const file = await getEnvFunction(name);
+        //     if (!Core.isScalar(file)) {
+        //         throw new RuntimeException(`Invalid file url: env var "${name}" is non-scalar.`);
+        //     }
 
-            return (await Core.getResource(file)).content;
-        }
+        //     return (await Core.getResource(file)).content;
+        // }
 
         let env: string | undefined;
         if (-1 !== i || prefix !== 'string') {
-            env = await getEnvFunction(name);
+            env = getEnvFunction(name);
             if (null === env) {
                 return;
             }
@@ -53,7 +53,7 @@ export class EnvVarProcessor {
                 throw new EnvNotFoundException(name);
             }
 
-            env = await this.container.getParameter(`env(${name})`);
+            env = this.container.getParameter(`env(${name})`);
             if (null === env) {
                 return;
             }
@@ -95,12 +95,12 @@ export class EnvVarProcessor {
         }
 
         if (prefix === 'resolve') {
-            return Core.replaceAsync(env, /%%|%([^%\s]+)%/, async (_, paramName) => {
+            return env.replace(/%%|%([^%\s]+)%/, (_, paramName) => {
                 if (!paramName) {
                     return '%';
                 }
 
-                const value = await this.container.getParameter(paramName);
+                const value = this.container.getParameter(paramName);
                 if (!Core.isScalar(value)) {
                     throw new RuntimeException(
                         `Parameter "${paramName}" found when resolving env var "${name}" must be scalar, "${typeof value}" given.`,
@@ -111,13 +111,14 @@ export class EnvVarProcessor {
             });
         }
 
-        if (prefix === 'yml') {
-            try {
-                return YAML.parse(env);
-            } catch (e) {
-                throw new RuntimeException(`Invalid YAML env var "${name}": ${e.message}`);
-            }
-        }
+        // TODO: handles plugins
+        // if (prefix === 'yml') {
+        //     try {
+        //         return YAML.parse(env);
+        //     } catch (e) {
+        //         throw new RuntimeException(`Invalid YAML env var "${name}": ${e.message}`);
+        //     }
+        // }
 
         return;
     }

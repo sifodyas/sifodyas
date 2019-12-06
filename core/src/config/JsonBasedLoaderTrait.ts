@@ -80,7 +80,7 @@ export class JsonBasedLoaderTrait extends Trait {
                 if (content['parameters'].hasOwnProperty(key)) {
                     let value = content['parameters'][key];
                     if (container.hasParameter(key)) {
-                        const current = await container.getParameter(key);
+                        const current = container.getParameter(key);
                         if (Core.isPureObject(current) && Core.isPureObject(value)) {
                             value = merge(current, value);
                         }

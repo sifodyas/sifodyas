@@ -25,7 +25,7 @@ export class MergeExtensionConfigurationPass implements ICompilerPass {
                 return;
             }
 
-            config = (await container.parameterBag.resolveValue(config)) as object;
+            config = container.parameterBag.resolveValue(config) as object;
 
             p.push(
                 (async () => {

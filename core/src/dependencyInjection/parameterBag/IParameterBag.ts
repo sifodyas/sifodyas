@@ -27,9 +27,8 @@ export interface IParameterBag<T = unknown> {
      * @param name The parameter name.
      * @returns The parameter value.
      * @throws ParameterNotFoundException if the parameter is not defined.
-     * @async
      */
-    get(name: string): Promise<T>;
+    get(name: string): T;
     /**
      * Removes a parameter.
      *
@@ -62,9 +61,8 @@ export interface IParameterBag<T = unknown> {
      * @param value A value.
      * @returns The resolved value.
      * @throws ParameterNotFoundException if a placeholder references a parameter that does not exist.
-     * @async
      */
-    resolveValue(value: T): Promise<T>;
+    resolveValue(value: T): T;
     /**
      * Escape parameter placeholders %.
      *

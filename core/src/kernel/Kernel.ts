@@ -219,7 +219,7 @@ export abstract class Kernel implements IKernel {
         await this.initializeContainer();
 
         const p = [],
-            SYNC_MODE = (await this.container.getParameter('kernel.boot.sync')) === true;
+            SYNC_MODE = this.container.getParameter('kernel.boot.sync') === true;
         if (SYNC_MODE) {
             console.warn('\u26a0\ufe0f\ufe0f Kernel is booting synchronously ! \u26a0\ufe0f\ufe0f'); // tslint:disable-line:no-console
         }
@@ -250,7 +250,7 @@ export abstract class Kernel implements IKernel {
         this.booted = false;
 
         const p = [],
-            SYNC_MODE = (await this.container.getParameter('kernel.boot.sync')) === true;
+            SYNC_MODE = this.container.getParameter('kernel.boot.sync') === true;
         for (const name of this.syncBundles) {
             const bundle = this.bundles.get(name);
             p.push(await bundle.shutdown());
@@ -282,8 +282,8 @@ export abstract class Kernel implements IKernel {
             return;
         }
 
-        const doTimeout = (await this.container.getParameter('kernel.unregister.parallel')) === true,
-            SYNC_MODE = (await this.container.getParameter('kernel.boot.sync')) === true,
+        const doTimeout = this.container.getParameter('kernel.unregister.parallel') === true,
+            SYNC_MODE = this.container.getParameter('kernel.boot.sync') === true,
             doer = async () => {
                 const p = [];
                 for (const bundleToDelete of bundleNames) {

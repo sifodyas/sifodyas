@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/sifodyas",
-  "version": "2.1.0-dev.7",
+  "version": "2.1.0-dev.8",
   "description": "Bring the famous bundle / kernel logic to Javascript",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",

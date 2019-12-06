@@ -1,4 +1,5 @@
 import { Core } from '../../core/Core';
+import { Container } from '../Container';
 import { ParameterCircularReferenceException } from '../exception/ParameterCircularReferenceException';
 import { ParameterNotFoundException } from '../exception/ParameterNotFoundException';
 import { RuntimeException } from '../exception/RuntimeException';
@@ -12,7 +13,7 @@ export class ParameterBag implements IParameterBag<unknown> {
     protected resolved: boolean = false;
 
     // I saw what you did there !!!!
-    constructor(parameters: Map<string, unknown> = new Map(), public container: any /* Container */ = null) {
+    constructor(parameters: Map<string, unknown> = new Map(), public container: Container = null) {
         parameters.forEach((value, key) => {
             this.parameters.set(key.toLowerCase(), value);
         });
@@ -44,9 +45,8 @@ export class ParameterBag implements IParameterBag<unknown> {
      * @throws ParameterNotFoundException          if a placeholder references a parameter that does not exist
      * @throws ParameterCircularReferenceException if a circular reference if detected
      * @throws RuntimeException                    when a given parameter has a type problem.
-     * @async
      */
-    protected async resolveString(value: string, resolving: Map<string, any> = new Map()) {
+    protected resolveString(value: string, resolving: Map<string, any> = new Map()) {
         const MACHETTE = /^%([^%\s]+)%$/g.exec(value);
         if (MACHETTE) {
             const key = MACHETTE[1].toLowerCase();
@@ -57,10 +57,10 @@ export class ParameterBag implements IParameterBag<unknown> {
 
             resolving.set(key, true);
 
-            return this.resolved ? this.get(key) : (this.resolveValue(await this.get(key), resolving) as any);
+            return this.resolved ? this.get(key) : (this.resolveValue(this.get(key), resolving) as any);
         }
 
-        return Core.replaceAsync(value, /%%|%([^%\s]+)%/g, async (_, trouvaille) => {
+        return value.replace(/%%|%([^%\s]+)%/g, (_, trouvaille) => {
             if (!trouvaille) {
                 return '%%';
             }
@@ -77,7 +77,7 @@ export class ParameterBag implements IParameterBag<unknown> {
                 return `%${key}%`;
             }
 
-            const resolved = await this.get(key);
+            const resolved = this.get(key);
 
             if (!Core.isString(resolved) && !Core.isNumber(resolved)) {
                 throw new RuntimeException(
@@ -90,6 +90,36 @@ export class ParameterBag implements IParameterBag<unknown> {
 
             return this.resolved ? strResolved : this.resolveString(strResolved, resolving);
         });
+        // return Core.replaceAsync(value, /%%|%([^%\s]+)%/g, async (_, trouvaille) => {
+        //     if (!trouvaille) {
+        //         return '%%';
+        //     }
+        //     const key = trouvaille.toLowerCase();
+        //     if (resolving.has(key)) {
+        //         throw new ParameterCircularReferenceException(Array.from(resolving.keys()));
+        //     }
+
+        //     if (0 === key.indexOf('env(') && ')' === key.substr(-1) && 'env()' !== key) {
+        //         const env = key.substring(4, key.length - 1);
+        //         if (this.container) {
+        //             return this.container.resolveEnvs(env, true);
+        //         }
+        //         return `%${key}%`;
+        //     }
+
+        //     const resolved = await this.get(key);
+
+        //     if (!Core.isString(resolved) && !Core.isNumber(resolved)) {
+        //         throw new RuntimeException(
+        //             `A string value must be composed of strings and/or numbers, but found parameter "${key}" of type ${typeof resolved} inside string "${value}".`,
+        //         );
+        //     }
+
+        //     const strResolved = `${resolved}`;
+        //     resolving.set(key, true);
+
+        //     return this.resolved ? strResolved : this.resolveString(strResolved, resolving);
+        // });
     }
 
     public clear() {
@@ -106,7 +136,7 @@ export class ParameterBag implements IParameterBag<unknown> {
         return this.parameters;
     }
 
-    public async get(name: string) {
+    public get(name: string) {
         const lowerName = name?.toLowerCase() ?? '';
         if (!this.parameters.has(lowerName)) {
             if (!lowerName) {
@@ -178,7 +208,7 @@ export class ParameterBag implements IParameterBag<unknown> {
         this.resolved = true;
     }
 
-    public async resolveValue(value: unknown, resolving: Map<string, unknown> = new Map()) {
+    public resolveValue(value: unknown, resolving: Map<string, unknown> = new Map()) {
         if (Core.isString(value)) {
             return this.resolveString(value, resolving) as any;
         }
@@ -186,7 +216,7 @@ export class ParameterBag implements IParameterBag<unknown> {
         if (Core.isMap<string, unknown>(value)) {
             const result: Map<string, unknown> = new Map();
             for (const [k, v] of value) {
-                result.set(await this.resolveValue(k, resolving), await this.resolveValue(v, resolving));
+                result.set(this.resolveValue(k, resolving), this.resolveValue(v, resolving));
             }
 
             return result as any;
@@ -198,7 +228,7 @@ export class ParameterBag implements IParameterBag<unknown> {
                 if (!value.hasOwnProperty(prop)) {
                     continue;
                 }
-                result[await this.resolveValue(prop, resolving)] = await this.resolveValue(value[prop], resolving);
+                result[this.resolveValue(prop, resolving)] = this.resolveValue(value[prop], resolving);
             }
 
             return result;
@@ -210,7 +240,7 @@ export class ParameterBag implements IParameterBag<unknown> {
                 if (!value.hasOwnProperty(prop)) {
                     continue;
                 }
-                result[prop] = await this.resolveValue(value[prop], resolving);
+                result[prop] = this.resolveValue(value[prop], resolving);
             }
 
             return result;
