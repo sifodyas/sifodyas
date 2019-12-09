@@ -1,4 +1,4 @@
-import { IContainer } from '../IContainer';
+import { IContainer } from '../../IContainer';
 
 /**
  * Interface that must be implemented by compilation passes.

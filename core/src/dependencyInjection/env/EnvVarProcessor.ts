@@ -1,9 +1,10 @@
-import { Core } from '../core';
-import { Container } from './Container';
-import { EnvNotFoundException, RuntimeException } from './exception';
+import { Core } from '../../core';
+import { Container } from '../Container';
+import { EnvNotFoundException, RuntimeException } from '../exception';
+import { PrefixParserRegister } from './PrefixParserRegister';
 
 type GetEnvFunction = (name: string) => string;
-export type EnvPrefix = 'base64' | 'boolean' | 'file' | 'float' | 'int' | 'json' | 'resolve' | 'string' | 'yml';
+export type EnvPrefix = 'base64' | 'boolean' | 'float' | 'int' | 'json' | 'resolve' | 'string';
 
 export class EnvVarProcessor {
     private systemEnvCaseResolver: Map<string, string | undefined> = new Map();
@@ -111,15 +112,14 @@ export class EnvVarProcessor {
             });
         }
 
-        // TODO: handles plugins
-        // if (prefix === 'yml') {
-        //     try {
-        //         return YAML.parse(env);
-        //     } catch (e) {
-        //         throw new RuntimeException(`Invalid YAML env var "${name}": ${e.message}`);
-        //     }
-        // }
+        const prefixParser = PrefixParserRegister.getAll().filter(p => p.getPrefix() === prefix)[0];
 
-        return;
+        if (!prefixParser) {
+            throw new RuntimeException(
+                `Env prefix parser for "${prefix}" was not found. Make sure the right pass is loaded.`,
+            );
+        }
+
+        return prefixParser.parse(env);
     }
 }

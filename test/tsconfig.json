@@ -6,7 +6,8 @@
     "paths": {
       "@sifodyas/sifodyas": [ "core/src/" ],
       "@sifodyas/yaml-loader": [ "lib/plugins/yaml-loader/src/" ],
-      "@sifodyas/fp-di": [ "lib/plugins/fp-di/src/" ]
+      "@sifodyas/fp-di": [ "lib/plugins/fp-di/src/" ],
+      "@sifodyas/yaml-env-parser": [ "lib/plugins/yaml-env-parser/src/" ]
     }
   }
 }

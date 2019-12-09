@@ -1,3 +1,3 @@
+export * from './passe';
+
 export * from './Compiler';
-export * from './ICompilerPass';
-export * from './MergeExtensionConfigurationPass';

@@ -1,6 +1,6 @@
 import { Container } from '../Container';
 import { InvalidArgumentException } from '../exception';
-import { ICompilerPass } from './ICompilerPass';
+import { ICompilerPass } from './passe';
 
 export enum CompilerPassType {
     TYPE_AFTER_REMOVING = 'afterRemoving',

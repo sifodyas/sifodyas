@@ -188,7 +188,7 @@ export class ParameterBag implements IParameterBag<unknown> {
         return this.parameters.has(name.toLowerCase());
     }
 
-    public async resolve() {
+    public resolve() {
         if (this.resolved) {
             return;
         }
@@ -196,7 +196,7 @@ export class ParameterBag implements IParameterBag<unknown> {
         const parameters: Map<string, unknown> = new Map();
         for (const [key, value] of this.parameters) {
             try {
-                parameters.set(key, this.unescapeValue(await this.resolveValue(value)));
+                parameters.set(key, this.unescapeValue(this.resolveValue(value)));
             } catch (e) {
                 throw new ParameterNotFoundException(
                     `Can't resolve ${key} value. (${(e as ParameterNotFoundException).message})`,

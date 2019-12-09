@@ -1,0 +1,24 @@
+{
+  "name": "@sifodyas/yaml-env-parser",
+  "version": "2.1.0-dev.8",
+  "description": "Parse yaml from env variables in Sifodyas config",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "UPGRADE.md"
+  ],
+  "scripts": {
+    "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
+    "clean": "rimraf dist/*",
+    "prebuild": "yarn clean",
+    "build": "yarn _webpack"
+  },
+  "dependencies": {
+    "yamljs": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@sifodyas/sifodyas": "^2"
+  }
+}

@@ -1,11 +1,11 @@
 import { Core } from '../core';
 import { IReset } from '../IReset';
-import { Kernel, KernelParametersKey } from '../kernel/Kernel';
+import { Kernel, KernelParametersKey } from '../kernel';
 import { Compiler, CompilerPassType } from './compiler/Compiler';
-import { ICompilerPass } from './compiler/ICompilerPass';
-import { EnvPrefix, EnvVarProcessor } from './EnvVarProcessor';
-import { ParameterCircularReferenceException, RuntimeException } from './exception';
+import { ICompilerPass } from './compiler/passe/ICompilerPass';
+import { EnvPrefix, EnvVarProcessor } from './env/EnvVarProcessor';
 import { LogicException } from './exception/LogicException';
+import { ParameterCircularReferenceException } from './exception/ParameterCircularReferenceException';
 import { IExtension } from './extension/IExtension';
 import { IContainer } from './IContainer';
 import { FrozenParameterBag } from './parameterBag/FrozenParameterBag';
@@ -141,14 +141,12 @@ export class Container implements IContainer, IReset {
      * @async
      */
     public async compile(): Promise<any> {
-        // ContainerBuilder.compile
+        // formely ContainerBuilder.compile
         await this.getCompiler().compile(this);
         this.extensionConfigs = new Map();
 
-        // this._parameterBag = new ParameterBag(await this.resolveEnvs(this._parameterBag.all(), true));
-
-        // Container.compile
-        await this._parameterBag.resolve();
+        // formely Container.compile
+        this._parameterBag.resolve();
         this._parameterBag = new FrozenParameterBag(this._parameterBag.all());
 
         this.compiled = true;
@@ -421,15 +419,6 @@ export class Container implements IContainer, IReset {
         const env = value as string;
         const resolved = format ? bag.escapeValue(this.getEnvBuilder(env)) : `%%env(${env})%%`;
 
-        if (!Core.isString(resolved) && !Core.isNumber(resolved)) {
-            throw new RuntimeException(
-                `A string value must be composed of strings and/or numbers, but found paramter "env(${env})" of type ${typeof resolved} inside string value "${this.resolveEnvs(
-                    env,
-                )}".`,
-            );
-        }
-        // env = placeholder.replace(new RegExp(resolved as string, 'i'), env);
-
         usedEnvs.set(env, resolved as string);
         this.envCounters.set(env, this.envCounters.has(env) ? 1 + this.envCounters.get(env) : 1);
 
@@ -482,15 +471,15 @@ export class MergeExtensionConfigurationContainer extends Container {
         throw new LogicException(`Cannot compile the container in extension "${this.extensionClass}".`);
     }
 
-    public async resolveEnvs<T extends any[] | Map<string, any> | string>(
+    public resolveEnvs<T extends any[] | Map<string, any> | string>(
         value: T,
         format = false,
         usedEnvs: Map<string, string> = new Map(),
-    ): Promise<T> {
+    ): T {
         if (true !== format || !Core.isString(value)) {
             return super.resolveEnvs(value, format, usedEnvs);
         }
-        const valueResolved = await this.parameterBag.resolveValue(value);
+        const valueResolved = this.parameterBag.resolveValue(value);
 
         return super.resolveEnvs(valueResolved, format, usedEnvs);
     }

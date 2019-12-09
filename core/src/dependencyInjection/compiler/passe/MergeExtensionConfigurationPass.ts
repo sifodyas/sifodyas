@@ -1,4 +1,4 @@
-import { Container, MergeExtensionConfigurationContainer } from '../Container';
+import { Container, MergeExtensionConfigurationContainer } from '../../Container';
 import { ICompilerPass } from './ICompilerPass';
 
 /**
@@ -8,7 +8,7 @@ export class MergeExtensionConfigurationPass implements ICompilerPass {
     constructor(private extensions: string[]) {}
 
     public async process(container: Container) {
-        // HttpKernel/DependencyInjection/MergeExtensionConfigurationPass.process
+        // was HttpKernel/DependencyInjection/MergeExtensionConfigurationPass.process
         this.extensions.forEach(name => {
             if (!Object.keys(container.getExtensionConfig(name)).length) {
                 container.loadFromExtension(name, {});

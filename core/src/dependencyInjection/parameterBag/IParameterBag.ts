@@ -52,9 +52,8 @@ export interface IParameterBag<T = unknown> {
     has(name: string): boolean;
     /**
      * Replaces parameter placeholders (%name%) by their values for all parameters.
-     * @async
      */
-    resolve(): Promise<void>;
+    resolve(): void;
     /**
      * Replaces parameter placeholders (%name%) by their values.
      *
