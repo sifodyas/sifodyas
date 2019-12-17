@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/fp-di",
-  "version": "2.1.0-dev.8",
+  "version": "2.1.0-dev.14",
   "description": "Provide a way to havec DI from Sifodyas container into Functional Programing (or functional components)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/yaml-env-parser",
-  "version": "2.1.0-dev.8",
+  "version": "2.1.0-dev.14",
   "description": "Parse yaml from env variables in Sifodyas config",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/yaml-loader",
-  "version": "2.1.0-dev.8",
+  "version": "2.1.0-dev.14",
   "description": "Add YamlLoader to Sifodyas",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

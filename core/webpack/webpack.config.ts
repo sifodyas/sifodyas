@@ -39,7 +39,7 @@ console.info(`\x1b[4m\x1b[36mBUILD ${packageJson.name} FOR ${packageJson.version
 export default function webpackConfig(environment?: WebpackEnvParam): webpack.Configuration {
     return {
         devtool: 'source-map',
-        mode: 'production',
+        mode: 'development',
         resolve: {
             extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
         },

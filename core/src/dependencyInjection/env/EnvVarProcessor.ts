@@ -54,7 +54,7 @@ export class EnvVarProcessor {
                 throw new EnvNotFoundException(name);
             }
 
-            env = this.container.getParameter(`env(${name})`);
+            env = this.container.getParameter(`env(${name})`) as string;
             if (null === env) {
                 return;
             }

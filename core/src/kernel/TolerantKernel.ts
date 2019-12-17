@@ -1,8 +1,9 @@
 import { DelegatingLoader } from '../config/DelegatingLoader';
 import { ILoader } from '../config/ILoader';
 import { LoaderResolver } from '../config/LoaderResolver';
+import { ResourceFile } from '../core';
 import { Container } from '../dependencyInjection/Container';
-import { Kernel, KernelParametersKey } from './Kernel';
+import { Kernel } from './Kernel';
 
 /**
  * The Kernel is the heart of the Sifodyas system.
@@ -16,7 +17,7 @@ export abstract class TolerantKernel extends Kernel {
         const resolver = new (class TolerantLoaderResolver extends LoaderResolver {
             public addLoader(loader: ILoader) {
                 const tmpLoadMethod = loader.load.bind(loader);
-                loader.load = async (resource: any, type?: string) => {
+                loader.load = async (resource: ResourceFile, type?: string) => {
                     try {
                         await tmpLoadMethod(resource, type);
                     } catch (e) {
@@ -32,7 +33,7 @@ export abstract class TolerantKernel extends Kernel {
         return new DelegatingLoader(resolver);
     }
 
-    protected getKernelParameters(): Map<KernelParametersKey | string, any> {
+    protected getKernelParameters() {
         const parameters = super.getKernelParameters();
         parameters.set('kernel.tolerant', true);
 

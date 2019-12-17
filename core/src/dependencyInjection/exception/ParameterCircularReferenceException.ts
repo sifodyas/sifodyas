@@ -5,6 +5,7 @@ import { BaseException } from '../../core/BaseException';
  */
 export class ParameterCircularReferenceException extends BaseException {
     private _parameters: string[];
+    public baseClass = 'ParameterCircularReferenceException';
 
     constructor(parameters: string[], previous: Error = null) {
         super(

@@ -28,7 +28,7 @@ describe('Functional Programing Dependency Injection Plugin', () => {
 
         // hook like
         (() => {
-            const [service] = fpDi.useServices(TEST_SERVICE_ID) as [TestService];
+            const [service] = fpDi.getServices(TEST_SERVICE_ID) as [TestService];
             service.run();
         })();
 
@@ -51,7 +51,7 @@ describe('Functional Programing Dependency Injection Plugin', () => {
 
         // hook like
         const f1 = () => {
-            const [param] = fpDi.useParameters(TEST_PARAM_ID);
+            const [param] = fpDi.getParameters(TEST_PARAM_ID);
             return param;
         };
         expect(f1()).toEqual(TEST_PARAM_ID);
@@ -83,7 +83,7 @@ describe('Functional Programing Dependency Injection Plugin', () => {
 
         // hook like
         const f1 = () => {
-            const [[service], [param]] = fpDi.useDependencies([TEST_SERVICE_ID], [TEST_PARAM_ID]) as [
+            const [[service], [param]] = fpDi.getDependencies([TEST_SERVICE_ID], [TEST_PARAM_ID]) as [
                 [TestService],
                 [string],
             ];

@@ -82,7 +82,7 @@ describe('Kernel', () => {
         const kernel = new (class TestKernel extends TolerantKernel {
             public loaders = [YamlLoader, JsonLoader];
             public async registerContainerConfiguration(loader: ILoader): Promise<void> {
-                return loader.load(await Core.getResource(`${configRoot}/config_bundle.yaml`));
+                return loader.load(await Core.getResource(`${configRoot}/config_tolerant.yaml`));
             }
 
             public registerBundles(): BundleExtended[] {

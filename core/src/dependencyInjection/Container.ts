@@ -1,6 +1,7 @@
+import { KernelParametersKeyType, ServicesKeyType } from '..';
 import { Core } from '../core';
 import { IReset } from '../IReset';
-import { Kernel, KernelParametersKey } from '../kernel';
+import { Kernel } from '../kernel';
 import { Compiler, CompilerPassType } from './compiler/Compiler';
 import { ICompilerPass } from './compiler/passe/ICompilerPass';
 import { EnvPrefix, EnvVarProcessor } from './env/EnvVarProcessor';
@@ -12,15 +13,10 @@ import { FrozenParameterBag } from './parameterBag/FrozenParameterBag';
 import { IParameterBag } from './parameterBag/IParameterBag';
 import { ParameterBag } from './parameterBag/ParameterBag';
 
-// tslint:disable
-type ReturnParameterType<KEY> = KEY extends 'kernel.boot.sync' | 'kernel.unregister.parallel' | 'kernel.debug'
-    ? boolean : KEY extends 'kernel.environment'
-    ? 'dev' | 'prod' : KEY extends 'kernel.name' | 'kernel.version' | 'kernel.path'
-    ? string : KEY extends 'kernel.bundles' | 'kernel.coreBundles'
-    ? string[] : KEY extends KernelParametersKey
-    ? unknown : any;
-type ReturnServiceType<T> = T extends 'kernel' ? Kernel : T extends 'service_container' ? Container : unknown;
-// tslint:enable
+type ReturnParameterType<KEY extends keyof KernelParametersKeyType> = KernelParametersKeyType[KEY];
+type ReturnServiceType<KEY extends keyof ServicesKeyType, KernelType> = ServicesKeyType[KEY] extends Kernel
+    ? KernelType
+    : ServicesKeyType[KEY];
 
 /**
  * Container is a dependency injection container.
@@ -61,13 +57,13 @@ export class Container implements IContainer, IReset {
 
     private compiled = false;
 
-    protected _parameterBag: IParameterBag<any>;
-    protected _services: Map<string, any> = new Map();
+    protected _parameterBag: IParameterBag;
+    protected _services: Map<string, unknown> = new Map();
     protected _extensions: Map<string, IExtension> = new Map();
 
     protected resolving: Map<string, boolean> = new Map();
 
-    public constructor(parameterBag: IParameterBag<any> = new ParameterBag()) {
+    public constructor(parameterBag: IParameterBag = new ParameterBag()) {
         this._parameterBag = parameterBag;
         (this._parameterBag as ParameterBag).container = this;
     }
@@ -140,7 +136,7 @@ export class Container implements IContainer, IReset {
      *
      * @async
      */
-    public async compile(): Promise<any> {
+    public async compile() {
         // formely ContainerBuilder.compile
         await this.getCompiler().compile(this);
         this.extensionConfigs = new Map();
@@ -162,7 +158,7 @@ export class Container implements IContainer, IReset {
      * @param service The service instance.
      * @returns The container itself for chaining.
      */
-    public set(id: string, service?: any): this {
+    public set(id: string, service?: unknown): this {
         id = String.prototype.toLowerCase.apply(id);
 
         if (Container.FORBIDDEN_SERVICE_NAMES.includes(id)) {
@@ -199,10 +195,9 @@ export class Container implements IContainer, IReset {
      * @param id the service identifier.
      * @returns The associated service.
      */
-    public get(id: 'kernel'): Kernel;
-    public get(id: 'service_container'): this;
-    public get<T extends string>(id: T): ReturnServiceType<T>;
-    public get(id: string): any {
+    public get<T extends keyof ServicesKeyType>(id: T): ReturnServiceType<T, this>;
+    public get(id: string): unknown;
+    public get(id: string): unknown {
         id = String.prototype.toLowerCase.apply(id);
 
         if ('service_container' === id) {
@@ -226,13 +221,9 @@ export class Container implements IContainer, IReset {
      * @returns The parameter value
      * @throws ParameterNotFoundException if the parameter is not defined.
      */
-    public getParameter(name: 'kernel.boot.sync' | 'kernel.unregister.parallel' | 'kernel.debug'): boolean;
-    public getParameter(name: 'kernel.environment'): 'dev' | 'prod';
-    public getParameter(name: 'kernel.name' | 'kernel.version' | 'kernel.path'): string;
-    public getParameter(name: 'kernel.bundles' | 'kernel.coreBundles'): string[];
-    public getParameter(name: KernelParametersKey): unknown;
-    public getParameter<KEY extends KernelParametersKey | string>(name: KEY): ReturnParameterType<KEY>;
-    public getParameter(name: string): any {
+    public getParameter<KEY extends keyof KernelParametersKeyType>(name: KEY): ReturnParameterType<KEY>;
+    public getParameter(name: string): unknown;
+    public getParameter(name: string): unknown {
         return this._parameterBag.get(name);
     }
 
@@ -242,7 +233,7 @@ export class Container implements IContainer, IReset {
      * @param name The parameter name.
      * @param value The parameter value.
      */
-    public setParameter(name: string, value: any): void {
+    public setParameter(name: string, value: unknown) {
         this._parameterBag.set(name, value);
     }
 
@@ -379,13 +370,13 @@ export class Container implements IContainer, IReset {
         return this._services.has(id);
     }
 
-    public resolveEnvs(value: any, format = false, usedEnvs: Map<string, string> = new Map()): any {
+    public resolveEnvs(value: unknown, format = false, usedEnvs: Map<string, string> = new Map()) {
         const bag = this.parameterBag;
         if (format) {
             value = bag.resolveValue(value);
         }
 
-        if (Core.isArray<any>(value)) {
+        if (Core.isArray(value)) {
             const result = [];
             for (const k in value) {
                 result[k] = this.resolveEnvs(value[k], format, usedEnvs);
@@ -456,7 +447,7 @@ export class Container implements IContainer, IReset {
  */
 export class MergeExtensionConfigurationContainer extends Container {
     private extensionClass: string;
-    public constructor(extension: IExtension, parameterBag: IParameterBag<any> = null) {
+    public constructor(extension: IExtension, parameterBag: IParameterBag = null) {
         super(parameterBag);
         this.extensionClass = extension.constructor.name;
     }
@@ -471,16 +462,16 @@ export class MergeExtensionConfigurationContainer extends Container {
         throw new LogicException(`Cannot compile the container in extension "${this.extensionClass}".`);
     }
 
-    public resolveEnvs<T extends any[] | Map<string, any> | string>(
+    public resolveEnvs<T extends unknown[] | Map<string, unknown> | string>(
         value: T,
         format = false,
         usedEnvs: Map<string, string> = new Map(),
     ): T {
         if (true !== format || !Core.isString(value)) {
-            return super.resolveEnvs(value, format, usedEnvs);
+            return super.resolveEnvs(value, format, usedEnvs) as T;
         }
         const valueResolved = this.parameterBag.resolveValue(value);
 
-        return super.resolveEnvs(valueResolved, format, usedEnvs);
+        return super.resolveEnvs(valueResolved, format, usedEnvs) as T;
     }
 }

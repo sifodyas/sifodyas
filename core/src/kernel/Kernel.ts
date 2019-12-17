@@ -1,3 +1,4 @@
+import { KernelParametersKeyType } from '..';
 import { Loader } from '../config';
 import { DelegatingLoader } from '../config/DelegatingLoader';
 import { ILoader } from '../config/ILoader';
@@ -17,18 +18,6 @@ declare const MAJOR_VERSION: number;
 declare const MINOR_VERSION: number;
 declare const RELEASE_VERSION: number;
 declare const EXTRA_VERSION: string;
-
-export type KernelParametersKey =
-    | 'kernel.tolerant'
-    | 'kernel.boot.sync'
-    | 'kernel.unregister.parallel'
-    | 'kernel.environment'
-    | 'kernel.debug'
-    | 'kernel.name'
-    | 'kernel.bundles'
-    | 'kernel.coreBundles'
-    | 'kernel.version'
-    | 'kernel.path';
 
 /**
  * The Kernel is the heart of the Sifodyas system.
@@ -107,7 +96,8 @@ export abstract class Kernel implements IKernel {
      *
      * @returns A map of kernel parameters.
      */
-    protected getKernelParameters(): Map<KernelParametersKey | string, any> {
+    protected getKernelParameters(): Map<keyof KernelParametersKeyType, unknown> {
+        // TODO: infered ObjectMap for union type
         const bundles: string[] = [];
         const coreBundles: string[] = [];
         this.bundles.forEach(bundle => {
@@ -117,7 +107,7 @@ export abstract class Kernel implements IKernel {
             }
         });
 
-        const parameters: Map<KernelParametersKey | string, unknown> = new Map();
+        const parameters: Map<keyof KernelParametersKeyType, unknown> = new Map();
 
         parameters.set('kernel.boot.sync', false);
         parameters.set('kernel.unregister.parallel', true);
@@ -137,7 +127,9 @@ export abstract class Kernel implements IKernel {
      *
      * @returns A map of overridden parameters
      */
-    protected async getOverriddenParameters(_container: Container): Promise<Map<KernelParametersKey | string, any>> {
+    protected async getOverriddenParameters(
+        _container: Container,
+    ): Promise<Map<keyof KernelParametersKeyType, unknown>> {
         return new Map();
     }
 
@@ -316,7 +308,7 @@ export abstract class Kernel implements IKernel {
 
     public abstract async registerContainerConfiguration(loader: ILoader): Promise<void>;
 
-    public getBundle(name: string): BundleExtended {
+    public getBundle(name: string) {
         if (!this.bundles.has(name)) {
             const message1 = `Bundle "${name}" does not exist or it is not enabled.`,
                 message2 = `Maybe you forgot to add it in the registerBundles() method of your ${this.constructor.name}?`;

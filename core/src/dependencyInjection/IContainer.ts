@@ -44,9 +44,8 @@ export interface IContainer extends IPsrContainer {
      * Gets a parameter.
      *
      * @throws {InvalidArgumentException} if the parameter is not defined
-     * @async
      */
-    getParameter(name: string): Promise<unknown>;
+    getParameter(name: string): unknown;
 
     /**
      * Checks if a parameter exists.
@@ -56,5 +55,5 @@ export interface IContainer extends IPsrContainer {
     /**
      * Sets a parameter.
      */
-    setParameter(name: string, value: unknown);
+    setParameter(name: string, value: unknown): void;
 }

@@ -7,7 +7,9 @@
     "lint:test": "tslint --project test/tsconfig.json -c tslint.json 'test/**/*.ts*'",
     "lint:fix": "yarn lint --fix && yarn lint:test --fix",
     "w": "yarn workspace",
-    "ws": "yarn workspaces"
+    "ws": "yarn workspaces",
+    "build": "yarn w @sifodyas/sifodyas build && lerna exec --parallel yarn build",
+    "pub": "lerna exec -- yarn publish --non-interactive --registry 'https://nexus.wynd.eu/repository/npm-hosted/'"
   },
   "private": true,
   "workspaces": [
@@ -30,6 +32,7 @@
     "fork-ts-checker-webpack-plugin": "^3.0.0",
     "glob": "^7.1.4",
     "jest": "^24.5.0",
+    "lerna": "^3.19.0",
     "rimraf": "^3.0.0",
     "semver": "^6.0.0",
     "source-map-loader": "^0.2.4",
