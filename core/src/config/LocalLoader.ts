@@ -20,8 +20,9 @@ import { Loader } from './Loader';
 @Use(JsonBasedLoaderTrait)
 export class LocalLoader extends Loader {
     public async load(this: this & JsonBasedLoaderTrait, resourceFile: ResourceFile) {
-        await this.loadJson(resourceFile.content as any, this.container);
-        this.loadFromExtensions(resourceFile.content as any);
+        const content = (resourceFile.content as unknown) as object;
+        await this.loadJson(content, this.container);
+        this.loadFromExtensions(content);
     }
 
     public supports(resourceFile: ResourceFile) {

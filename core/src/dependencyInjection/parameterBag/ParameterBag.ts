@@ -46,7 +46,7 @@ export class ParameterBag implements IParameterBag<unknown> {
      * @throws ParameterCircularReferenceException if a circular reference if detected
      * @throws RuntimeException                    when a given parameter has a type problem.
      */
-    protected resolveString(value: string, resolving: Map<string, any> = new Map()) {
+    protected resolveString(value: string, resolving: Map<string, unknown> = new Map()) {
         const MACHETTE = /^%([^%\s]+)%$/g.exec(value);
         if (MACHETTE) {
             const key = MACHETTE[1].toLowerCase();
@@ -57,7 +57,7 @@ export class ParameterBag implements IParameterBag<unknown> {
 
             resolving.set(key, true);
 
-            return this.resolved ? this.get(key) : (this.resolveValue(this.get(key), resolving) as any);
+            return this.resolved ? this.get(key) : this.resolveValue(this.get(key), resolving);
         }
 
         return value.replace(/%%|%([^%\s]+)%/g, (_, trouvaille) => {
@@ -210,7 +210,7 @@ export class ParameterBag implements IParameterBag<unknown> {
 
     public resolveValue(value: unknown, resolving: Map<string, unknown> = new Map()) {
         if (Core.isString(value)) {
-            return this.resolveString(value, resolving) as any;
+            return this.resolveString(value, resolving);
         }
 
         if (Core.isMap<string, unknown>(value)) {
@@ -219,11 +219,11 @@ export class ParameterBag implements IParameterBag<unknown> {
                 result.set(this.resolveValue(k, resolving), this.resolveValue(v, resolving));
             }
 
-            return result as any;
+            return result;
         }
 
         if (Core.isPureObject(value)) {
-            const result: any = {};
+            const result = {};
             for (const prop in value) {
                 if (!value.hasOwnProperty(prop)) {
                     continue;
@@ -235,7 +235,7 @@ export class ParameterBag implements IParameterBag<unknown> {
         }
 
         if (Core.isArray(value)) {
-            const result: any = [];
+            const result = [];
             for (const prop in value) {
                 if (!value.hasOwnProperty(prop)) {
                     continue;

@@ -24,7 +24,7 @@ export class Compiler {
     private _optimizationPasses: ICompilerPass[][] = [];
     private _removingPasses: ICompilerPass[][] = [];
 
-    public static isPass(obj: any): obj is ICompilerPass {
+    public static isPass(obj: unknown): obj is ICompilerPass {
         const pass = obj as ICompilerPass;
         return pass.process && typeof pass.process === 'function';
     }

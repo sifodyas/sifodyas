@@ -17,7 +17,7 @@ export abstract class Core {
      */
     public static currentScript: HTMLScriptElement = (() => {
         if (Core.isNodeJs()) {
-            return '' as any;
+            return ('' as unknown) as HTMLScriptElement;
         }
         return (document.currentScript || (() => document.querySelector('#currentScript'))()) as HTMLScriptElement;
     })();
@@ -87,7 +87,7 @@ export abstract class Core {
      * Compares the keys from a1 against the keys from a2 and returns the difference.
      * This function is like array_diff() except the comparison is done on the keys instead of the values.
      */
-    public static array_diff_key<T>(a1: T[], ...a2: any[][]): T[] {
+    public static array_diff_key<T>(a1: T[], ...a2: unknown[][]): T[] {
         const ret: T[] = [];
 
         Object.keys(a1).forEach(k1 => {
@@ -97,7 +97,7 @@ export abstract class Core {
                         return;
                     }
                 }
-                ret[k1 as any] = a1[k1 as any];
+                ret[k1] = a1[k1];
             }
         });
 
@@ -110,7 +110,7 @@ export abstract class Core {
      * Compares the keys from m1 against the keys from m2 and returns the difference.
      * This function is like array_diff() except the comparison is done on the keys instead of the values.
      */
-    public static map_diff_key<T>(m1: Map<string, T>, ...m2: Array<Map<string, any>>): Map<string, T> {
+    public static map_diff_key<T>(m1: Map<string, T>, ...m2: Array<Map<string, unknown>>): Map<string, T> {
         const ret = new Map();
 
         if (!m1 || !m1.size) {
@@ -134,7 +134,7 @@ export abstract class Core {
     /**
      * Converts a map (string key based) to an classic object.
      */
-    public static mapToObject(map: Map<string, any>): any {
+    public static mapToObject(map: Map<string, unknown>): object {
         const obj = Object.create(null);
         map.forEach((v, k) => (obj[k] = v));
 
@@ -157,7 +157,7 @@ export abstract class Core {
      * @param x The value to check.
      * @returns True if is number, false otherwise.
      */
-    public static isNumber(x: any): x is number {
+    public static isNumber(x: unknown): x is number {
         return typeof x === 'number';
     }
 
@@ -167,7 +167,7 @@ export abstract class Core {
      * @param x The value to check.
      * @returns True if is string, false otherwise.
      */
-    public static isString(x: any): x is string {
+    public static isString(x: unknown): x is string {
         return typeof x === 'string';
     }
 
@@ -177,7 +177,7 @@ export abstract class Core {
      * @param x The value to check.
      * @returns True if is Map, false otherwise.
      */
-    public static isMap<K, V>(x: any): x is Map<K, V> {
+    public static isMap<K, V>(x: unknown): x is Map<K, V> {
         const map = x as Map<K, V>;
         return map?.entries !== undefined && map.delete !== undefined;
     }
@@ -188,7 +188,7 @@ export abstract class Core {
      * @param x The value to check.
      * @returns True if is array, false otherwise.
      */
-    public static isArray<T>(x: any): x is T[] {
+    public static isArray<T>(x: unknown): x is T[] {
         return Array.isArray(x);
     }
 
@@ -198,7 +198,7 @@ export abstract class Core {
      * @param x The value to check.
      * @returns True if is native object, false otherwise.
      */
-    public static isObject(x: any): x is object | any[] {
+    public static isObject(x: unknown): x is object | unknown[] {
         return x === Object(x);
     }
 
@@ -208,7 +208,7 @@ export abstract class Core {
      * @param x The value to check.
      * @returns True if is Object (or JSON based), false otherwise.
      */
-    public static isPureObject(x: any): x is object {
+    public static isPureObject(x: unknown): x is object {
         return Core.isObject(x) && !Core.isArray(x);
     }
 
@@ -220,7 +220,7 @@ export abstract class Core {
      * @param hasOptional Define if the type has optional properties.
      * @returns True if is Object (or JSON based) with good properties, false otherwise.
      */
-    public static isPureTypedObject<T extends object>(x: any, dummy: T, hasOptional: boolean = true): x is T {
+    public static isPureTypedObject<T extends object>(x: unknown, dummy: T, hasOptional = true): x is T {
         if (typeof dummy !== typeof x) {
             return false;
         }
@@ -233,8 +233,9 @@ export abstract class Core {
             }
         }
 
+        const o = x as object;
         if (!hasOptional) {
-            for (const prop in x) {
+            for (const prop in o) {
                 if (x.hasOwnProperty(prop)) {
                     if (!dummy.hasOwnProperty(prop)) {
                         return false; // to much prop in x
@@ -257,11 +258,13 @@ export abstract class Core {
      * @param obj The objects
      * @returns The entries.
      */
-    public static objectEntries(obj: any): Array<[string, any]> {
+    public static objectEntries(obj: unknown): Array<[string, unknown]> {
         if (!obj) {
             return [];
         }
-        Object.entries = Object.entries || ((o: any) => Object.keys(o).map(k => [k, o[k]]) as any);
+        Object.entries =
+            Object.entries ||
+            ((((o: unknown) => Object.keys(o).map(k => [k, o[k]])) as unknown) as typeof Object.entries);
 
         return Object.entries(obj);
     }
@@ -272,12 +275,15 @@ export abstract class Core {
     public static async replaceAsync(
         str: string,
         regex: RegExp,
-        asyncReplacer: (substring: string, ...args: any[]) => Promise<string>,
+        asyncReplacer: (substring: string, ...args: unknown[]) => Promise<string>,
     ) {
         const promises: Array<Promise<string>> = [];
-        str.replace(regex, (match, ...args) => promises.push(asyncReplacer(match, ...args)) as any);
+        str.replace(regex, (match, ...args) => {
+            promises.push(asyncReplacer(match, ...args));
+            return '';
+        });
         const data = await Promise.all(promises);
-        return str.replace(regex, () => data.shift() as string);
+        return str.replace(regex, () => data.shift());
     }
 
     /**

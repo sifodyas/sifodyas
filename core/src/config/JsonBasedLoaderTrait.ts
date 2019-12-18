@@ -24,7 +24,7 @@ export class JsonBasedLoaderTrait extends Trait {
     /**
      * @async
      */
-    public async parseImport(this: JsonBasedLoaderTrait & Loader, content: any, path: string): Promise<any> {
+    public async parseImport(this: JsonBasedLoaderTrait & Loader, content: object, path: string) {
         if ('imports' in content) {
             if (!Core.isArray(content['imports'])) {
                 throw new InvalidArgumentException(
@@ -57,7 +57,7 @@ export class JsonBasedLoaderTrait extends Trait {
                 }
             }
 
-            return Promise.all(p);
+            await Promise.all(p);
         }
     }
 
@@ -68,7 +68,7 @@ export class JsonBasedLoaderTrait extends Trait {
      * @param container The container onto load
      * @throws InvalidArgumentException If the parameters are not in an array.
      */
-    public async loadJson(content: any, container: Container) {
+    public async loadJson(content: object, container: Container) {
         if ('parameters' in content) {
             if (!Core.isPureObject(content['parameters'])) {
                 throw new InvalidArgumentException(
@@ -94,7 +94,7 @@ export class JsonBasedLoaderTrait extends Trait {
     /**
      * Resolves services.
      */
-    public resolveServices(value: any): any {
+    public resolveServices(value: string[] | string | unknown) {
         if (Core.isArray<string>(value)) {
             value = value.map(v => this.resolveServices(v));
         } else if (Core.isString(value) && value.startsWith('@=')) {
@@ -112,12 +112,13 @@ export class JsonBasedLoaderTrait extends Trait {
                 invalidBehavior = ContainerError.EXCEPTION_ON_INVALID_REFERENCE;
             }
 
-            if (value.substr(-1) === '=') {
-                value = value.substr(0, -1);
+            const v = value as string;
+            if (v.substr(-1) === '=') {
+                value = v.substr(0, -1);
             }
 
             if (invalidBehavior !== null) {
-                value = new Reference(value, invalidBehavior);
+                value = new Reference(value as string, invalidBehavior);
             }
         }
 

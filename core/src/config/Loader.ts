@@ -21,7 +21,7 @@ export abstract class Loader implements ILoader {
     /**
      * Loads from Extensions.
      */
-    protected loadFromExtensions(content: any): void {
+    protected loadFromExtensions(content: object) {
         for (const nameSpace in content) {
             if (!content.hasOwnProperty(nameSpace) || ['imports', 'parameters', 'services'].includes(nameSpace)) {
                 continue;
