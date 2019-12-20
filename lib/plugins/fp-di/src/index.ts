@@ -8,7 +8,26 @@ import {
 
 let globContainer: Container = null;
 
-// hack for union string litteral with string to keep autocomplete
+/**
+ * Compiler Pass that handle the init of the global container.
+ */
+export class FunctionalDepencencyInjectorPass implements ICompilerPass {
+    public async process(container: Container) {
+        if (globContainer) {
+            if (container.getParameter('kernel.environment') !== 'test') {
+                throw new RuntimeException(
+                    'Seems like the FunctionalDepencencyInjectorPass was already processed. Make sure that only one is loaded in container.',
+                );
+            }
+        }
+
+        globContainer = container;
+    }
+}
+
+/**
+ * Hack for union string litteral with string to keep autocomplete
+ */
 type UnknownMapping = string & { _?: never };
 
 // Services types
@@ -29,6 +48,9 @@ type ParamMappedType<T> = {
     [I in keyof T]: ExtendedParamMapping[Extract<T[I], ParamKeys>];
 };
 
+//
+// GET WAY
+//
 /**
  * Get one service by its name from the internal globalized Container.
  */
@@ -69,133 +91,108 @@ export function getParameters<K extends ParamKeys[], U extends K | UnknownMappin
     return ((paramIds as K).map(getParameter) as unknown) as ParamMappedType<U>;
 }
 
+//
+// INJECT WAY
+//
+/**
+ * Remove first argument from a function
+ *
+ * Credit: https://stackoverflow.com/a/58765199/5252629
+ */
+type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
+
 /**
  * Inject one service as first argument to a bound function.
- *
- * Even if autocomplete, injected values cannot be type infered.
  */
 export function injectService<
     U extends ServKeys | UnknownMapping,
     F extends (...args: [U extends ServKeys ? ServMapping[U] : unknown, ...any[]]) => unknown
 >(f: F, serviceId: U | ServKeys) {
-    return f.bind(f, getService(serviceId));
+    return f.bind(f, getService(serviceId)) as OmitFirstArg<F>;
 }
 
 /**
  * Inject several services as first arguments to a bound function.
- *
- * Even if autocomplete, injected values cannot be type infered.
  */
 export function injectServices<
     K extends ServKeys[],
     U extends K | UnknownMapping[],
     F extends (...args: [ServMappedType<U>, ...any[]]) => unknown
 >(f: F, ...serviceIds: U | K) {
-    return f.bind(f, getServices(...serviceIds) as ServMappedType<U>);
+    return f.bind(f, getServices(...serviceIds) as ServMappedType<U>) as OmitFirstArg<F>;
 }
+
 /**
  * Inject one parameter as first argument to a bound function.
- *
- * Even if autocomplete, injected values cannot be type infered.
  */
 export function injectParameter<
     U extends ParamKeys | UnknownMapping,
     F extends (...args: [U extends ParamKeys ? ParamMapping[U] : unknown, ...any[]]) => unknown
 >(f: F, paramId: U | ParamKeys) {
-    return f.bind(f, getParameter(paramId));
+    return f.bind(f, getParameter(paramId)) as OmitFirstArg<F>;
 }
+
 /**
  * Inject several parameters as first arguments to a bound function.
- *
- * Even if autocomplete, injected values cannot be type infered.
  */
 export function injectParameters<
     K extends ParamKeys[],
     U extends K | UnknownMapping[],
     F extends (...args: [ParamMappedType<U>, ...any[]]) => unknown
 >(f: F, ...paramIds: U | K) {
-    return f.bind(f, getParameters(...paramIds) as ParamMappedType<U>);
+    return f.bind(f, getParameters(...paramIds) as ParamMappedType<U>) as OmitFirstArg<F>;
 }
 
-export interface WithService<K> {
+//
+// WITH WAY
+//
+export interface WithService<K extends ServKeys | UnknownMapping = UnknownMapping> {
     service: K extends ServKeys ? ServMapping[K] : unknown;
 }
 /**
  * Inject one service inside the first argument object of a function, then return a high order function of it.
  */
-export const withService = <
-    T extends unknown,
-    U extends ServKeys | UnknownMapping,
-    P extends WithService<U>,
-    C extends (props: P) => T
+export const withService = <U extends ServKeys | UnknownMapping>(servicesId: U | ServKeys) => <
+    P extends WithService<U>
 >(
-    servicesId: U | ServKeys,
-) => (component: C) => (props: Omit<P, keyof WithService<U>>) =>
-    component({ ...props, service: getService(servicesId) } as P);
+    component: (props: P) => unknown,
+) => (props: Omit<P, 'service'>) => component({ ...props, service: getService(servicesId) } as P);
 
-export interface WithServices<KEYS> {
-    services: ServMappedType<KEYS>;
+export interface WithServices<K extends ServKeys[] | UnknownMapping[] = UnknownMapping[]> {
+    services: ServMappedType<K>;
 }
+
 /**
  * Inject several services inside the first argument object of a function, then return a high order function of it.
  */
-export const withServices = <
-    T extends unknown,
-    K extends ServKeys[],
-    U extends K | UnknownMapping[],
-    P extends WithServices<U>,
-    C extends (props: P) => T
+export const withServices = <K extends ServKeys[], U extends K | UnknownMapping[]>(...servicesIds: U | K) => <
+    P extends WithServices<U>
 >(
-    ...servicesIds: U | K
-) => (component: C) => (props: Omit<P, keyof WithServices<U>>) =>
-    component({ ...props, services: getServices(...servicesIds) } as P);
+    component: (props: P) => unknown,
+) => (props: Omit<P, 'services'>) => component({ ...props, services: getServices(...servicesIds) } as P);
 
-export interface WithParameters<K> {
-    parameters: ParamMappedType<K>;
+export interface WithParameter<K extends ParamKeys | UnknownMapping = UnknownMapping> {
+    parameter: K extends ParamKeys ? ParamMapping[K] : unknown;
 }
+
 /**
  * Inject one parameter inside the first argument object of a function, then return a high order function of it.
  */
-export const withParameter = <
-    T extends unknown,
-    U extends ParamKeys | UnknownMapping,
-    P extends WithParameter<U>,
-    C extends (props: P) => T
+export const withParameter = <U extends ParamKeys | UnknownMapping>(paramId: U | ParamKeys) => <
+    P extends WithParameter<U>
 >(
-    paramId: U | ParamKeys,
-) => (component: C) => (props: Omit<P, keyof WithParameter<U>>) =>
-    component({ ...props, parameter: getParameter(paramId) } as P);
+    component: (props: P) => unknown,
+) => (props: Omit<P, 'parameter'>) => component({ ...props, parameter: getParameter(paramId) } as P);
 
-export interface WithParameter<K> {
-    parameter: K extends ParamKeys ? ParamMapping[K] : unknown;
+export interface WithParameters<K extends ParamKeys[] | UnknownMapping[] = UnknownMapping[]> {
+    parameters: ParamMappedType<K>;
 }
+
 /**
  * Inject several parameters inside the first argument object of a function, then return a high order function of it.
  */
-export const withParameters = <
-    T extends unknown,
-    K extends ParamKeys[],
-    U extends K | UnknownMapping[],
-    P extends WithParameters<U>,
-    C extends (props: P) => T
+export const withParameters = <K extends ParamKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) => <
+    P extends WithParameters<U>
 >(
-    ...paramIds: U | K
-) => (component: C) => (props: Omit<P, keyof WithParameters<U>>) =>
-    component({ ...props, parameters: getParameters(...paramIds) } as P);
-
-/**
- * Compiler Pass that handle the init of the global container.
- */
-export class FunctionalDepencencyInjectorPass implements ICompilerPass {
-    public async process(container: Container) {
-        if (globContainer) {
-            if (container.getParameter('kernel.environment') !== 'test') {
-                throw new RuntimeException(
-                    'Seems like the FunctionalDepencencyInjectorPass was already processed. Make sure that only one is loaded in container.',
-                );
-            }
-        }
-
-        globContainer = container;
-    }
-}
+    component: (props: P) => unknown,
+) => (props: Omit<P, 'parameters'>) => component({ ...props, parameters: getParameters(...paramIds) } as P);

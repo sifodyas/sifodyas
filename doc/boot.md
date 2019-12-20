@@ -15,7 +15,7 @@ After that, the Container itself will add a Merge Config Pass that will handle t
 ## 2. Build Container
 If the Kernel implements the Pass interface, it can add its own `process` method and will register itself as Pass in the Compiler.  
 The Container will then load the config file.  
-The parameters will be then resolved and set in the Container and each registered Extensions will have to validate and get their own configuration. (see [container doc](container.md))
+The parameters will be then resolved and set in the Container and each registered Extension will have to validate and get their own configuration. (see [container doc](container.md))
 
 ## 3. Compile Container
 This phase will finalize the compiler and with it, the container.  
