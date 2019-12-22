@@ -30,9 +30,7 @@
   ],
   "scripts": {
     "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
-    "clean": "rimraf dist/*",
-    "prebuild": "yarn clean",
-    "build": "yarn _webpack"
+    "build": "rimraf dist/* && TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts"
   },
   "dependencies": {
     "@bios21/tstrait": "^1.1.0",

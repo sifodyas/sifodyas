@@ -2,6 +2,11 @@
   "name": "@sifodyas/fp-di",
   "version": "2.1.0-dev.14",
   "description": "Provide a way to have DI from Sifodyas container into Functional Programing (or functional components)",
+  "repository": {
+    "url": "git@github.com:sifodyas/sifodyas.git",
+    "directory": "lib/plugins/fp-di",
+    "type": "git"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -9,12 +14,6 @@
     "dist/",
     "UPGRADE.md"
   ],
-  "scripts": {
-    "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
-    "clean": "rimraf dist/*",
-    "prebuild": "yarn clean",
-    "build": "yarn _webpack"
-  },
   "peerDependencies": {
     "@sifodyas/sifodyas": "^2"
   }

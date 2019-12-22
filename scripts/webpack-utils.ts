@@ -4,8 +4,12 @@ import path from 'path';
 import webpack from 'webpack';
 
 export const ROOT_WORKSPACE = path.resolve(__dirname, '..');
+export const ROOT_APP_PATH = process.cwd();
 export const WORKSPACE_PACKAGE_JSON = JSON.parse(
     fs.readFileSync(path.resolve(ROOT_WORKSPACE, 'package.json'), { encoding: 'utf-8' }),
+);
+export const APP_PACKAGE_JSON = JSON.parse(
+    fs.readFileSync(path.resolve(ROOT_APP_PATH, 'package.json'), { encoding: 'utf-8' }),
 );
 
 /**

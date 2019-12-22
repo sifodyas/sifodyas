@@ -1,13 +1,16 @@
 // tslint:disable:object-literal-sort-keys
-// tslint:disable:no-console
 // tslint:disable:no-default-export
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
 import webpack from 'webpack';
-import { banner, DtsBanner, externals } from '../../../../scripts/webpack-utils';
-import packageJson from '../package.json';
-
-const ROOT_APP_PATH = path.resolve(__dirname, '../');
+import {
+    APP_PACKAGE_JSON as packageJson,
+    banner,
+    DtsBanner,
+    externals,
+    ROOT_APP_PATH,
+    ROOT_WORKSPACE,
+} from './webpack-utils';
 
 export interface WebpackEnvParam {
     watch?: boolean;
@@ -25,7 +28,7 @@ export default function webpackConfig(environment?: WebpackEnvParam): webpack.Co
         entry: {
             app: `${ROOT_APP_PATH}/src/index.ts`,
         },
-        externals: [...externals(), ...externals(path.resolve(__dirname, '../'))],
+        externals: [...externals(), ...externals(ROOT_APP_PATH)],
         output: {
             path: `${ROOT_APP_PATH}/dist`,
             filename: 'index.js',
@@ -58,7 +61,7 @@ export default function webpackConfig(environment?: WebpackEnvParam): webpack.Co
                 async: false,
                 useTypescriptIncrementalApi: true,
                 tsconfig: `${ROOT_APP_PATH}/src/tsconfig.json`,
-                watch: path.resolve(ROOT_APP_PATH),
+                watch: path.resolve(ROOT_APP_PATH, 'src'),
             }),
             new webpack.BannerPlugin({
                 banner,

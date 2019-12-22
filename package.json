@@ -8,7 +8,9 @@
     "lint:fix": "yarn lint --fix && yarn lint:test --fix",
     "w": "yarn workspace",
     "ws": "yarn workspaces",
-    "build": "yarn w @sifodyas/sifodyas build && lerna exec --parallel yarn build",
+    "build:core": "yarn w @sifodyas/sifodyas build",
+    "build:other": "lerna exec --stream --parallel \"yarn rimraf dist/* && TS_NODE_PROJECT=\"\\$LERNA_ROOT_PATH/scripts/tsconfig.json\" yarn webpack --display-error-details --config \\$LERNA_ROOT_PATH/scripts/webpack-other.config.ts\"",
+    "build": "yarn build:core && yarn build:other",
     "pub": "lerna exec -- yarn publish --non-interactive --registry 'https://nexus.wynd.eu/repository/npm-hosted/'"
   },
   "private": true,

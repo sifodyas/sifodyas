@@ -2,6 +2,11 @@
   "name": "@sifodyas/yaml-loader",
   "version": "2.1.0-dev.14",
   "description": "Add YamlLoader to Sifodyas",
+  "repository": {
+    "url": "git@github.com:sifodyas/sifodyas.git",
+    "directory": "lib/plugins/yaml-loader",
+    "type": "git"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -9,12 +14,6 @@
     "dist/",
     "UPGRADE.md"
   ],
-  "scripts": {
-    "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
-    "clean": "rimraf dist/*",
-    "prebuild": "yarn clean",
-    "build": "yarn _webpack"
-  },
   "dependencies": {
     "@bios21/tstrait": "^1.1.0",
     "yamljs": "^0.3.0"
