@@ -5,7 +5,6 @@ export * from './expressionLanguage';
 export * from './kernel';
 
 export * from './IReset';
-export * from './Types';
 
 // we explicitly export what could be ambient overridden
 import { Container, ParameterBag } from './dependencyInjection';
