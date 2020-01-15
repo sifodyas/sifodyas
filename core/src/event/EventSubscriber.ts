@@ -1,11 +1,14 @@
-import { EventKeyType } from '..';
+import { EventKeyType, UnknownMapping } from '..';
 import { IReset } from '../IReset';
 import { EventObserver, EventPublisher } from './EventPublisher';
 
 export class EventSubscriber implements IReset {
     constructor(private eventPublisher: EventPublisher) {}
 
-    public subscribe<KEY extends keyof EventKeyType>(id: KEY, observer: EventObserver<KEY>) {
+    public subscribe<
+        KEY extends keyof EventKeyType | UnknownMapping,
+        OBSERVER extends EventObserver<KEY extends keyof EventKeyType ? KEY : any>
+    >(id: KEY, observer: OBSERVER) {
         const observers = this.eventPublisher.eventMap.get(id) ?? [];
         observers.push(observer);
         this.eventPublisher.eventMap.set(id, observers);

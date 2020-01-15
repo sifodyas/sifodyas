@@ -1,11 +1,28 @@
 import { FunctionalDepencencyInjectorPass, getParameter, getService } from '@sifodyas/fp-di';
-import { BundleExtended, Container, EventPublisher, EventSubscriber, ILoader, Kernel } from '@sifodyas/sifodyas';
+import {
+    BundleExtended,
+    Container,
+    EventPublisher,
+    EventSubscriber,
+    IEvent,
+    ILoader,
+    Kernel,
+} from '@sifodyas/sifodyas';
+
+class MockEvent implements IEvent {
+    public namespace: 'myCustomEvent';
+}
+
+declare module '@sifodyas/sifodyas' {
+    interface EventKeyType {
+        myCustomEvent: MockEvent;
+    }
+}
 
 describe('Event system', () => {
     let kernel: Kernel & { setFooService(): void };
     let eventPublisher: EventPublisher;
     let eventSubscriber: EventSubscriber;
-    eventPublisher;
 
     beforeEach(() => {
         kernel = new (class TestKernel extends Kernel {
@@ -102,5 +119,19 @@ describe('Event system', () => {
         getParameter('kernel.debug');
 
         expect(fn).toBeCalledTimes(2);
+    });
+
+    it('should publish and subscribe to custom events', async () => {
+        await kernel.boot();
+        const fn = jest.fn();
+
+        eventSubscriber.subscribe('myCustomEvent', evt => {
+            expect(evt instanceof MockEvent).toBeTruthy();
+            fn();
+        });
+
+        eventPublisher.publish('myCustomEvent', new MockEvent());
+
+        expect(fn).toBeCalledTimes(1);
     });
 });
