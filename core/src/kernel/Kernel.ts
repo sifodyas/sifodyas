@@ -52,8 +52,6 @@ export abstract class Kernel implements IKernel {
 
     /**
      * Returns the path based from the script url where the Kernel is running.
-     *
-     * @returns The path
      */
     public static getBasePath() {
         return `/${Core.getBasePath()}`;
