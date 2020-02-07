@@ -74,12 +74,12 @@ describe('Bundle', () => {
 
                 public getContainerExtension() {
                     return new (class TestExtension extends Extension {
-                        private configuration: IConfiguration;
-                        public getConfiguration(): IConfiguration {
+                        private configuration: IConfiguration<any>;
+                        public getConfiguration(): IConfiguration<any> {
                             return (this.configuration =
                                 this.configuration ||
-                                new (class TestConfigueation implements IConfiguration {
-                                    public validateConfig<T>(rawConfig: T): T {
+                                new (class TestConfigueation implements IConfiguration<any> {
+                                    public validateConfig(rawConfig: any) {
                                         return rawConfig;
                                     }
                                 })());

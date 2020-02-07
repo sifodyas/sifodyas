@@ -36,9 +36,12 @@ export class FunctionalDepencencyInjectorPass implements ICompilerPass {
 /**
  * Get one service by its name from the internal globalized Container.
  */
-export function getService<U extends ServiceKeys | UnknownMapping>(serviceId: U | ServiceKeys) {
+export function getService<
+    U extends ServiceKeys | UnknownMapping,
+    R extends U extends ServiceKeys ? ServMapping[U] : unknown
+>(serviceId: U | ServiceKeys) {
     if (globContainer) {
-        return globContainer.get(serviceId) as U extends ServiceKeys ? ServMapping[U] : unknown;
+        return globContainer.get(serviceId) as R;
     }
 
     throw new RuntimeException(
@@ -56,9 +59,12 @@ export function getServices<K extends ServiceKeys[], U extends K | UnknownMappin
 /**
  * Get one parameter by its name from the internal globalized Container.
  */
-export function getParameter<U extends ParameterKeys | UnknownMapping>(paramId: U | ParameterKeys) {
+export function getParameter<
+    U extends ParameterKeys | UnknownMapping,
+    R extends U extends ParameterKeys ? ParamMapping[U] : unknown
+>(paramId: U | ParameterKeys) {
     if (globContainer) {
-        return globContainer.getParameter(paramId) as U extends ParameterKeys ? ParamMapping[U] : unknown;
+        return globContainer.getParameter(paramId) as R;
     }
 
     throw new RuntimeException(

@@ -242,12 +242,15 @@ export class Container implements IContainer, IReset {
      * @returns The parameter value
      * @throws ParameterNotFoundException if the parameter is not defined.
      */
-    public getParameter<T extends ParameterKeys | UnknownMapping>(name: T | ParameterKeys) {
+    public getParameter<
+        T extends ParameterKeys | UnknownMapping,
+        R extends T extends ParameterKeys ? ReturnParameterType<T> : unknown
+    >(name: T | ParameterKeys): R {
         this.eventPublisher?.publish(
             'event.container.getParameter',
             new ContainerEvent(this).setModif('getParameterId', name as ParameterKeys),
         );
-        return this._parameterBag.get(name) as T extends ParameterKeys ? ReturnParameterType<T> : unknown;
+        return this._parameterBag.get(name) as R;
     }
 
     /**

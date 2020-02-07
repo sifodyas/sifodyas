@@ -1,9 +1,9 @@
 /**
  * Configuration interface.
  */
-export interface IConfiguration {
+export interface IConfiguration<T> {
     /**
      * Validate, format configuration, and return it to the Extension.
      */
-    validateConfig<T>(config: T): T;
+    validateConfig(config: T): T;
 }
