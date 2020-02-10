@@ -107,7 +107,7 @@ describe('Event system', () => {
         expect(fn).toBeCalledTimes(1);
     });
 
-    it('should only trigger multiple times', async () => {
+    it('should trigger multiple times', async () => {
         await kernel.boot();
         const fn = jest.fn();
 
@@ -117,6 +117,30 @@ describe('Event system', () => {
         });
         getParameter('kernel.debug');
         getParameter('kernel.debug');
+
+        expect(fn).toBeCalledTimes(2);
+    });
+
+    it('should trigger by iteration multiple times', async () => {
+        await kernel.boot();
+        const fn = jest.fn();
+
+        // defer listen
+        const p = (async () => {
+            let flag = 0;
+            for await (const evt of eventSubscriber.iterate('event.container.getParameter')) {
+                expect(evt.getState().getParameterId).toEqual('kernel.debug');
+                fn();
+                if (++flag === 2) {
+                    // dont need to wait for other events
+                    break;
+                }
+            }
+        })();
+        getParameter('kernel.debug');
+        getParameter('kernel.debug');
+        // wait for listen to finish
+        await p;
 
         expect(fn).toBeCalledTimes(2);
     });
