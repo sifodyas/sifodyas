@@ -3,7 +3,9 @@
 In Sifodyas, a very basic event hub is built in. This system allows you interact with kernel and other business component of your layer without having any a direct dependency to them.  
 The event system is also used to be aware of many steps of the lifecycle.
 
-Three main components are used: the `EventPublisher`, the `EventSubscriber`, and the event object implementing `IEvent`
+Three main components are used: the `EventPublisher`, the `EventSubscriber`, and the event object implementing `IEvent`.
+
+As it is for now, the event system is still in conception. Basic behavior is there, but the content of the event object may evolve (without breaking changes) in the future.
 
 ## `EventPublisher`
 This service allows you to send events to whoever wants to listen to them. It's accessible with `event_publisher` service id.  
@@ -48,5 +50,39 @@ class MyBundle extends Bundle {
 }
 ```
 
-## Event Object
-TBD
+## Event Object & Custom Events
+As said earlier, each triggered event will have an event object associated to it. This object implements the `IEvent` interface and optionally provides a `getState()` method.  
+This method is a way for the event to provide additional information.
+
+For examples ; `KernelEvent` based events don't need more than the trigger of the event itself to give you the desired status of the Kernel. On the contrary, `ContainerEvent` based events **do** need a state because it will tell you wich parameter or service have been moved from the Container.
+
+Multiple event id can share the same event class as long as it's relevent for the application. In any case, you should always implements the `IEvent` interface and define (again) the "namespace" of teh event (preferably equivalent to the event id).
+
+Adding autocomplete with your own events is pretty easy:
+```ts
+interface MyEventState {
+    isActive: boolean; // for example purpose
+}
+
+class MyEvent implements IEvent<MyEventState> {
+    public namespace = 'myBundle.myEvent';
+
+    public getState() { // should return the state type defined is the generic
+        return { isActive: true }
+    }
+}
+
+// augmenting sifodyas to give the EventSubriscriber/EventPublisher the knowledge of **your** event
+declare module '@sifodyas/sifodyas' {
+    interface EventKeyType {
+        'myBundle.myEvent': MyEvent;
+    }
+}
+
+// somewhere in your code
+container.get('event_subscriber').subsribe('myBundle.myEvent', evt => {
+    console.log(evt.getState().isActive);
+});
+container.get('event_publisher').publish('myBundle.myEvent', new MyEvent());
+// autocomplete and typechecking ok
+```
