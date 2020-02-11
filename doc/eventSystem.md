@@ -86,3 +86,8 @@ container.get('event_subscriber').subsribe('myBundle.myEvent', evt => {
 container.get('event_publisher').publish('myBundle.myEvent', new MyEvent());
 // autocomplete and typechecking ok
 ```
+
+You can find the list of all currently used event [here](../core/src/index.ts#L53).
+
+## Disabling the event system
+If you need to, you can disable the event system by setting the parameter `kernel.events` to false in the parameters file or by overriding the `getOverriddenParameters()` method in your Kernel.
