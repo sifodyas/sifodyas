@@ -7,6 +7,8 @@ Three main components are used: the `EventPublisher`, the `EventSubscriber`, and
 
 As it is for now, the event system is still in conception. Basic behavior is there, but the content of the event object may evolve (without breaking changes) in the future.
 
+<img width="100%" src="img/sifodyas-event.svg" />
+
 ## `EventPublisher`
 This service allows you to send events to whoever wants to listen to them. It's accessible with `event_publisher` service id.  
 The whole event map is stored in this object and even it can be directly manipulated, it **only** for internal uses.

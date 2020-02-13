@@ -15,7 +15,7 @@ It's used to give you some kind of structure to the low layer of your architectu
   - [Boot sequence](#boot-sequence)
   - [Bundle.s (& Services) => Container](#bundles--services--container)
   - [Loaders](#loaders)
-  - [EventHub](#eventhub)
+  - [EventSystem](#eventsystem)
 
 ## Definitions
 - `Kernel` is the entry point of a Sifodyas application. It role is to load every bundles and provides them a container to use.
@@ -95,5 +95,8 @@ You can check a deeper explaination [there](container.md).
 ### Loaders
 TBD
 
-### EventHub
-TBD
+### EventSystem
+<img width="100%" src="img/sifodyas-event.svg" />
+
+The event system, enabled with the `kernel.events` parameters, allows you to listen or trigger events based on an event id. The mechanism is similar to `EventEmitter` in some ways. You can subscribe with the `event_subscriber` service, and publish with the `event_publisher` service.  
+Go [here](eventSystem.md) for more informations.
