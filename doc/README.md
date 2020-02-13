@@ -1,12 +1,12 @@
 <img align="right" src="img/sifodyas.svg" />
 <h1>Sifodyas Documentation</h1>
 
-Sifodyas is a light framework that helps build a module-based application.
+Sifodyas is a light framework that helps you to build a module-based application.
 
 It works around the concept of Kernel/Bundle and Container.
 
-The goal is not to handle your whole application and give you ways to build your vues, your app states, not any kind of network transport manager.  
-It's used to give you some kind of structure to the low layer of your architecture.
+The goal is not to handle your whole application and give you ways to build your vues, your app states, nor any kind of network transport manager.  
+It's used to give you some kind of structure to the low layer of your application architecture.
 
 ## Table of contents <!-- omit in toc -->
 - [Definitions](#definitions)
@@ -18,11 +18,11 @@ It's used to give you some kind of structure to the low layer of your architectu
   - [EventSystem](#eventsystem)
 
 ## Definitions
-- `Kernel` is the entry point of a Sifodyas application. It role is to load every bundles and provides them a container to use.
+- `Kernel` is the entry point of a Sifodyas application. It role is to load every bundle and to provide them a common container to use.
 - `Container` can be seen as a big `Map` where services and bundles configurations are stored.
 - `Compiler` is responsible of compiling the container.
-- `Bundle` is a plugin, a package, or a module if you prefer. It's meant to be sandboxed at first but with a good Mediator pattern, or with an event handler system, bundles can interact with each other.
-- An `Extension` of the container is provided by the bundle and is used to get and validate a configuration set exclusively for the bundle. It's also used to tweak the compiler's lifecycle. An extension is mandatory. You can skip registering it if you don't need custom configuration.
+- `Bundle` is a plugin, a package, or a module if you prefer. It's meant to be sandboxed at first but with a good Mediator pattern, or with an event system, bundles can interact with each other.
+- An `Extension` of the container is provided by the bundle and is used to get and validate a configuration set exclusively for this bundle. It's also used to tweak the compiler's lifecycle. An extension is mandatory. You can skip registering it if you don't need custom configuration.
 
 ## Basic usage
 In a `app.ts` (for example purpose):
@@ -35,16 +35,17 @@ class AppBundle extends Bundle {
     }
 
     public async shutdown() {
-        // if you decide somehow to shutdown one or all you bundles
-        // you can cut sockets, save stuff, or anything during this method
+        // if you decide somehow to shutdown one or all your bundles
+        // you can cut sockets, close databases, save stuff, or anything during this method
     }
 
     public getContainerExtension() {
-        // where you container extension is provide
+        // where you container extension is provided
         // if you need to handle local configurations
     }
 }
 
+// main entry point
 export class AppKernel extends Kernel {
     public registerBundles() {
         // where you load all your bundles
@@ -55,8 +56,8 @@ export class AppKernel extends Kernel {
 
     public async registerContainerConfiguration(loader: ILoader) {
         // where you load the whole config/param file of your application.
-        // can be through rollup/webpack
-        // or by calling a remote file
+        // can be through rollup/webpack if you use them
+        // or by calling a remote file, or even a local file in server side execution
     }
 }
 ```
@@ -68,10 +69,11 @@ import { AppKernel } from './app';
 // commonly dev, prod, or test
 // useful to load a different config file depending of your environment
 const ENVIRONMENT = 'dev';
+// will be set as a parameter usable in every bundle
 const DEBUG = true;
 const kernel = new AppKernel(ENVIRONMENT, DEBUG);
 
-// top level await
+// top level await if you can
 await kernel.boot();
 ```
 
