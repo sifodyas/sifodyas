@@ -1,4 +1,5 @@
-# Container Mechanics
+<img align="right" src="img/sifodyas.svg" />
+<h1>Container Mechanics</h1>
 
 A Container can be seen as a big `Map` containing Services and configurations.  
 It stores common stuff that will be shared between bundles.  

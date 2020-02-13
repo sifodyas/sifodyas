@@ -1,4 +1,5 @@
-# Event System
+<img align="right" src="img/sifodyas.svg" />
+<h1>Event System</h1>
 
 In Sifodyas, a very basic event hub is built in. This system allows you interact with kernel and other business component of your layer without having any a direct dependency to them.  
 The event system is also used to be aware of many steps of the lifecycle.
@@ -36,7 +37,7 @@ class MyBundle extends Bundle {
         const onGetParameter = (evt: ContainerEvent) => {
             console.log(evt.getState());
         }
-        // classic subsribe to a container event
+        // classic subscribe to a container event
         eventSubscriber.subscribe('event.container.getParameter', onGetParameter);
 
         // you should give the same function that you used on subscribe to be able to unsubscribe. Behind the scene, your function is used as "id".
@@ -58,7 +59,7 @@ This method is a way for the event to provide additional information.
 
 For examples ; `KernelEvent` based events don't need more than the trigger of the event itself to give you the desired status of the Kernel. On the contrary, `ContainerEvent` based events **do** need a state because it will tell you wich parameter or service have been moved from the Container.
 
-Multiple event id can share the same event class as long as it's relevent for the application. In any case, you should always implements the `IEvent` interface and define (again) the "namespace" of teh event (preferably equivalent to the event id).
+Multiple event id can share the same event class as long as it's relevent for the application. In any case, you should always implements the `IEvent` interface and define (again) the "namespace" of the event (preferably equivalent to the event id).
 
 Adding autocomplete with your own events is pretty easy:
 ```ts

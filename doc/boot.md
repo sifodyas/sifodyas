@@ -1,4 +1,5 @@
-# Boot Sequence
+<img align="right" src="img/sifodyas.svg" />
+<h1>Boot Sequence</h1>
 
 The boot sequence is pretty straightforward. Here you can see how it works.  
 When the application asks for a `Kernel.boot`, the workflow goes through some several phases.
