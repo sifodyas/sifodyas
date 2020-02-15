@@ -1,6 +1,6 @@
 # Sifodyas
 
-<img align="right" src="doc/img/sifodyas.svg" height="200" alt="Sifodyas Logo" title="Sifodyas Logo"/>
+<img align="right" src="docs/img/sifodyas.svg" height="200" alt="Sifodyas Logo" title="Sifodyas Logo"/>
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
