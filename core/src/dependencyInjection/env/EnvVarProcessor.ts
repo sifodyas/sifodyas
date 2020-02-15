@@ -45,7 +45,7 @@ export class EnvVarProcessor {
             }
         } else if (name in process?.env ?? {}) {
             env = process.env[name];
-        } else if (window && `ENV_${name}` in window) {
+        } else if (typeof window !== 'undefined' && `ENV_${name}` in window) {
             env = window[`ENV_${name}`];
         } else if (this.systemEnvCaseResolver.has(name)) {
             env = this.systemEnvCaseResolver.get(name);

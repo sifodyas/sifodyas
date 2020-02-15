@@ -1,7 +1,8 @@
-import { KernelParametersKeyType, ServicesKeyType } from '..';
+import { ParameterKeys, ParametersKeyType, ServiceKeys, ServicesKeyType, UnknownMapping } from '..';
 import { Core } from '../core';
+import { ContainerEvent } from '../event';
+import { EventPublisher } from '../event/EventPublisher';
 import { IReset } from '../IReset';
-import { Kernel } from '../kernel';
 import { Compiler, CompilerPassType } from './compiler/Compiler';
 import { ICompilerPass } from './compiler/passe/ICompilerPass';
 import { EnvPrefix, EnvVarProcessor } from './env/EnvVarProcessor';
@@ -13,9 +14,9 @@ import { FrozenParameterBag } from './parameterBag/FrozenParameterBag';
 import { IParameterBag } from './parameterBag/IParameterBag';
 import { ParameterBag } from './parameterBag/ParameterBag';
 
-type ReturnParameterType<KEY extends keyof KernelParametersKeyType> = KernelParametersKeyType[KEY];
-type ReturnServiceType<KEY extends keyof ServicesKeyType, KernelType> = ServicesKeyType[KEY] extends Kernel
-    ? KernelType
+type ReturnParameterType<KEY extends keyof ParametersKeyType> = ParametersKeyType[KEY];
+type ReturnServiceType<KEY extends keyof ServicesKeyType, ContainerType> = ServicesKeyType[KEY] extends Container
+    ? ContainerType
     : ServicesKeyType[KEY];
 
 /**
@@ -33,7 +34,7 @@ export class Container implements IContainer, IReset {
      *
      * @returns A IParameterBag instance.
      */
-    public get parameterBag(): IParameterBag {
+    public get parameterBag() {
         return this._parameterBag;
     }
 
@@ -42,26 +43,34 @@ export class Container implements IContainer, IReset {
      *
      * @returns A map of IExtension
      */
-    public get extensions(): Map<string, IExtension> {
+    public get extensions() {
         return new Map(this._extensions);
     }
 
-    private static FORBIDDEN_SERVICE_NAMES: string[] = ['service_container'];
+    private get eventPublisher() {
+        if (!this._event) {
+            this._event = this._services.get('event_publisher') as EventPublisher;
+        }
+        return this._event;
+    }
 
-    private extensionConfigs: Map<string, object> = new Map();
+    private static FORBIDDEN_SERVICE_NAMES = ['service_container'];
 
-    private envCounters: Map<string, number> = new Map();
-    private envCache: Map<string, string> = new Map();
+    private extensionConfigs = new Map<string, object>();
+
+    private envCounters = new Map<string, number>();
+    private envCache = new Map<string, string>();
 
     private compiler?: Compiler;
+    private _event?: EventPublisher;
 
     private compiled = false;
 
     protected _parameterBag: IParameterBag;
-    protected _services: Map<string, unknown> = new Map();
-    protected _extensions: Map<string, IExtension> = new Map();
+    protected _services = new Map<string, unknown>();
+    protected _extensions = new Map<string, IExtension>();
 
-    protected resolving: Map<string, boolean> = new Map();
+    protected resolving = new Map<string, boolean>();
 
     public constructor(parameterBag: IParameterBag = new ParameterBag()) {
         this._parameterBag = parameterBag;
@@ -137,11 +146,11 @@ export class Container implements IContainer, IReset {
      * @async
      */
     public async compile() {
-        // formely ContainerBuilder.compile
+        // formerly ContainerBuilder.compile
         await this.getCompiler().compile(this);
         this.extensionConfigs = new Map();
 
-        // formely Container.compile
+        // formerly Container.compile
         this._parameterBag.resolve();
         this._parameterBag = new FrozenParameterBag(this._parameterBag.all());
 
@@ -158,11 +167,19 @@ export class Container implements IContainer, IReset {
      * @param service The service instance.
      * @returns The container itself for chaining.
      */
-    public set(id: string, service?: unknown): this {
-        id = String.prototype.toLowerCase.apply(id);
-
+    public set<T extends ServiceKeys | UnknownMapping>(
+        id: T | ServiceKeys,
+        service?: T extends ServiceKeys ? ReturnServiceType<T, this> : unknown,
+    ) {
         if (Container.FORBIDDEN_SERVICE_NAMES.includes(id)) {
             throw new Error(`You cannot set service "${id}".`);
+        }
+
+        if ('event_publisher' !== id) {
+            this.eventPublisher?.publish(
+                'event.container.setService',
+                new ContainerEvent(this).setModif('setServiceId', id as ServiceKeys),
+            );
         }
 
         if (service) {
@@ -180,9 +197,7 @@ export class Container implements IContainer, IReset {
      * @param id The service identifier.
      * @returns true if the service is defined, false otherwise.
      */
-    public has(id: string): boolean {
-        id = String.prototype.toLowerCase.apply(id);
-
+    public has<T extends ServiceKeys | UnknownMapping>(id: T | ServiceKeys) {
         if ('service_container' === id) {
             return true;
         }
@@ -195,16 +210,22 @@ export class Container implements IContainer, IReset {
      * @param id the service identifier.
      * @returns The associated service.
      */
-    public get<T extends keyof ServicesKeyType>(id: T): ReturnServiceType<T, this>;
-    public get(id: string): unknown;
-    public get(id: string): unknown {
-        id = String.prototype.toLowerCase.apply(id);
-
+    public get<
+        T extends ServiceKeys | UnknownMapping,
+        R extends T extends ServiceKeys ? ReturnServiceType<T, this> : unknown
+    >(id: T | ServiceKeys) {
         if ('service_container' === id) {
-            return this;
+            return this as R;
         }
 
-        return this._services.get(id);
+        if ('event_publisher' !== id) {
+            this.eventPublisher?.publish(
+                'event.container.getService',
+                new ContainerEvent(this).setModif('getServiceId', id as ServiceKeys),
+            );
+        }
+
+        return this._services.get(id) as R;
     }
 
     /**
@@ -221,10 +242,15 @@ export class Container implements IContainer, IReset {
      * @returns The parameter value
      * @throws ParameterNotFoundException if the parameter is not defined.
      */
-    public getParameter<KEY extends keyof KernelParametersKeyType>(name: KEY): ReturnParameterType<KEY>;
-    public getParameter(name: string): unknown;
-    public getParameter(name: string): unknown {
-        return this._parameterBag.get(name);
+    public getParameter<
+        T extends ParameterKeys | UnknownMapping,
+        R extends T extends ParameterKeys ? ReturnParameterType<T> : unknown
+    >(name: T | ParameterKeys): R {
+        this.eventPublisher?.publish(
+            'event.container.getParameter',
+            new ContainerEvent(this).setModif('getParameterId', name as ParameterKeys),
+        );
+        return this._parameterBag.get(name) as R;
     }
 
     /**
@@ -233,7 +259,10 @@ export class Container implements IContainer, IReset {
      * @param name The parameter name.
      * @param value The parameter value.
      */
-    public setParameter(name: string, value: unknown) {
+    public setParameter<T extends ParameterKeys | UnknownMapping>(
+        name: T | ParameterKeys,
+        value: T extends ParameterKeys ? ReturnParameterType<T> : unknown,
+    ) {
         this._parameterBag.set(name, value);
     }
 
@@ -243,7 +272,7 @@ export class Container implements IContainer, IReset {
      * @param name The parameter name.
      * @returns The presence of parameter in container.
      */
-    public hasParameter(name: string): boolean {
+    public hasParameter<T extends ParameterKeys | UnknownMapping>(name: T | ParameterKeys) {
         return this._parameterBag.has(name);
     }
 
@@ -348,6 +377,8 @@ export class Container implements IContainer, IReset {
     }
 
     public reset() {
+        this.eventPublisher?.publish('event.container.beforeReset', new ContainerEvent(this).setModif('reset', true));
+
         const services = new Map(this._services.entries());
         this._services.clear();
         this._services = new Map();

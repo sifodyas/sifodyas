@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/yaml-env-parser",
-  "version": "2.1.0-dev.14",
+  "version": "2.1.0-dev.26",
   "description": "Parse yaml from env variables in Sifodyas config",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",

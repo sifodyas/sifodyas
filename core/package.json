@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/sifodyas",
-  "version": "2.1.0-dev.14",
+  "version": "2.1.0-dev.26",
   "description": "Bring the famous bundle / kernel logic to Javascript",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",
@@ -22,7 +22,8 @@
   ],
   "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
   "license": "MIT",
-  "main": "dist/index.js",
+  "browser": "dist/index.js",
+  "main": "dist/index.node.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist/",

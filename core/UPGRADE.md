@@ -6,6 +6,18 @@
 
 ### Kernel
 - `boot` and `shutdown` methods does not longer return something. (they return `Promise<void>` now)
+- `getParameter` is not async anymore
+- Loaders returned by `getContainerLoader` are now only `JsonLoader` by default. `YamlLoader` is now in a separated plugin, `@sifodyas/yaml-loader`.  
+  Also, the protected member `loaders` should now be used in order to change default loaders.
+
+### Config
+- The env prefix `yaml:` is now handled by a separated plugin, `@sifodyas/yaml-env-parser`
+
+### Global
+- `KernelParametersKeyType` is now `ParametersKeyType`
+
+### Event sytem
+- `EventPublisher` and `EventSubscriber` are now available as services.
 
 ## `v1.7` to `v2.0.0`
 ### Global changes

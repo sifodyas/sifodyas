@@ -16,7 +16,7 @@ Bring the famous bundle / kernel logic to Javascript
 Sifodyas is a system based on Kernel/Bundle mechanic, that allow to separate and box features in package mode while
 giving them possibility to share and use services and parameters through a common container, and allow to load them
 asynchronously without blocking the browser.  
-See [the documentation](doc/) for architectural details and implementations examples.
+See [the documentation](docs/) for architectural details and implementations examples.
 
 ## Upgrade
 See the [Upgrade](./UPGRADE.md) file for more informations.

@@ -29,14 +29,10 @@ Object.entries(definedConst).forEach(([key, value]) => {
     definedConst[key] = JSON.stringify(value);
 });
 
-export default function webpackConfig(environment?: WebpackEnvParam): webpack.Configuration {
+export default function webpackConfig(environment?: WebpackEnvParam): webpack.Configuration[] {
     const conf = defaultConfig(environment);
-    return {
+    const base: webpack.Configuration = {
         ...conf,
-        node: {
-            fs: 'empty',
-            process: false,
-        },
         plugins: [
             ...conf.plugins,
             new webpack.DefinePlugin(definedConst),
@@ -46,4 +42,24 @@ export default function webpackConfig(environment?: WebpackEnvParam): webpack.Co
             }),
         ],
     };
+
+    return [
+        // node
+        {
+            ...base,
+            target: 'async-node',
+            output: {
+                ...base.output,
+                filename: 'index.node.js',
+            },
+        },
+        // browser
+        {
+            ...base,
+            node: {
+                fs: 'empty',
+                process: false,
+            },
+        },
+    ];
 }

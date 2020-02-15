@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/fp-di",
-  "version": "2.1.0-dev.14",
+  "version": "2.1.0-dev.26",
   "description": "Provide a way to have DI from Sifodyas container into Functional Programing (or functional components)",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",

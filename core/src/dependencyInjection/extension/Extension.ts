@@ -9,7 +9,7 @@ import { IExtension } from './IExtension';
 /**
  * Provides useful features shared by many extensions.
  */
-export abstract class Extension implements IExtension, IConfigurationExtension {
+export abstract class Extension<T = object> implements IExtension, IConfigurationExtension<T> {
     protected bundle: BundleExtended;
     protected processedConfig: unknown = null;
 
@@ -17,7 +17,7 @@ export abstract class Extension implements IExtension, IConfigurationExtension {
         this.bundle = bundle;
     }
 
-    protected processConfiguration<T>(configuration: IConfiguration, configs: T): T {
+    protected processConfiguration(configuration: IConfiguration<T>, configs: T): T {
         return {
             ...(this.processedConfig = configuration?.validateConfig(configs) ?? configs),
         };
@@ -34,7 +34,7 @@ export abstract class Extension implements IExtension, IConfigurationExtension {
         }
     }
 
-    public abstract getConfiguration(config: object, container: Container): IConfiguration;
+    public abstract getConfiguration(config: object, container: Container): IConfiguration<T>;
 
     public abstract load(configs: object, container: Container): Promise<void>;
 

@@ -1,20 +1,21 @@
-# Container Mechanics
+<img align="right" src="img/sifodyas.svg" />
+<h1>Container Mechanics</h1>
 
 A Container can be seen as a big `Map` containing Services and configurations.  
 It stores common stuff that will be shared between bundles.  
 For now, a service is set manually, and conventionally during the boot phase of the Kernel or a Bundle. But you can set it anytime you have access to the container.  
 Just don't forget that outside the boot method, it's up to you to handle the lifecycle of your service (when it's set, when it's get, when it's deleted, etc).  
 
-Also, a container can have extensions. Extensions are used to validate and get local configuration. A bundle configuration is only accessible for *this* bundle only, and will be set under a namespace string.
+Also, a container can have extensions. Extensions are used to validate and get a *local* configuration for a specific bundle. A bundle configuration is only accessible for *this* bundle only, and will be set under a namespace string.
 
 ## Services Worklow
 <img width="100%" src="img/sifodyas-container-bundle.svg" />
 
-### "Classic" Dependency Injection
+### "Classic/Transient" Dependency Injection
 WIP
 
 ### "Straigt Object" Dependency Injection
-A "Straight Object" is basically any type of instancied object or primitives. Unlike a classic DI, Services set as straight will not be instanciated and cannot be injected with an `interface`.  
+A "Straight Object" is basically any type of instancied object or primitive. Unlike a classic DI, Services set as straight will not be instanciated and cannot be injected with an `interface`.  
 Use a `type` to type what you get from the container.
 
 With this method, service ids are plain strings and can conventionally be name like `<bundleName>.<serviceId>`. You can for exemple set ids in an `const enum` to avoid magic strings

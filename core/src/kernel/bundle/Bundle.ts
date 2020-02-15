@@ -20,7 +20,10 @@ abstract class AbstractBundle implements IBundle {
         return (this.name = this.name ?? this.constructor.name);
     }
 
-    public abstract getNamespace(): string;
+    /** @deprecated */
+    public getNamespace() {
+        return '';
+    }
 
     public getContainerExtension(): IExtension {
         return null;

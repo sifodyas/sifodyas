@@ -1,6 +1,6 @@
 {
   "name": "@sifodyas/yaml-loader",
-  "version": "2.1.0-dev.14",
+  "version": "2.1.0-dev.26",
   "description": "Add YamlLoader to Sifodyas",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",

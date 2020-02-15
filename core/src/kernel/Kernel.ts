@@ -1,4 +1,4 @@
-import { KernelParametersKeyType } from '..';
+import { ParametersKeyType } from '..';
 import { Loader } from '../config';
 import { DelegatingLoader } from '../config/DelegatingLoader';
 import { ILoader } from '../config/ILoader';
@@ -9,6 +9,9 @@ import { Compiler, CompilerPassType, MergeExtensionConfigurationPass } from '../
 import { Container } from '../dependencyInjection/Container';
 import { InvalidArgumentException } from '../dependencyInjection/exception/InvalidArgumentException';
 import { LogicException } from '../dependencyInjection/exception/LogicException';
+import { EventPublisher } from '../event/EventPublisher';
+import { EventSubscriber } from '../event/EventSubscriber';
+import { KernelEvent } from '../event/KernelEvent';
 import { BundleExtended } from './bundle/Bundle';
 import { IKernel } from './IKernel';
 
@@ -35,6 +38,8 @@ export abstract class Kernel implements IKernel {
     private syncBundles: string[] = [];
     private asyncBundles: string[] = [];
 
+    private eventPublisher?: EventPublisher;
+
     protected bundles: Map<string, BundleExtended> = new Map();
 
     protected name: string;
@@ -47,8 +52,6 @@ export abstract class Kernel implements IKernel {
 
     /**
      * Returns the path based from the script url where the Kernel is running.
-     *
-     * @returns The path
      */
     public static getBasePath() {
         return `/${Core.getBasePath()}`;
@@ -61,7 +64,16 @@ export abstract class Kernel implements IKernel {
     protected async initializeContainer() {
         this.container = await this.buildContainer();
         await this.container.compile();
+        this.container.getParameter('kernel.events') && this.addEventSystem();
         this.container.set('kernel', this);
+    }
+
+    protected addEventSystem() {
+        const ep = (this.eventPublisher = new EventPublisher());
+        const es = new EventSubscriber(ep);
+
+        this.container.set('event_publisher', ep);
+        this.container.set('event_subscriber', es);
     }
 
     /**
@@ -96,7 +108,7 @@ export abstract class Kernel implements IKernel {
      *
      * @returns A map of kernel parameters.
      */
-    protected getKernelParameters(): Map<keyof KernelParametersKeyType, unknown> {
+    protected getKernelParameters(): Map<keyof ParametersKeyType, unknown> {
         // TODO: infered ObjectMap for union type
         const bundles: string[] = [];
         const coreBundles: string[] = [];
@@ -107,7 +119,7 @@ export abstract class Kernel implements IKernel {
             }
         });
 
-        const parameters: Map<keyof KernelParametersKeyType, unknown> = new Map();
+        const parameters: Map<keyof ParametersKeyType, unknown> = new Map();
 
         parameters.set('kernel.boot.sync', false);
         parameters.set('kernel.unregister.parallel', true);
@@ -118,6 +130,7 @@ export abstract class Kernel implements IKernel {
         parameters.set('kernel.coreBundles', coreBundles);
         parameters.set('kernel.version', Kernel.VERSION);
         parameters.set('kernel.path', (this.constructor as typeof Kernel).getBasePath());
+        parameters.set('kernel.events', true);
 
         return parameters;
     }
@@ -127,9 +140,7 @@ export abstract class Kernel implements IKernel {
      *
      * @returns A map of overridden parameters
      */
-    protected async getOverriddenParameters(
-        _container: Container,
-    ): Promise<Map<keyof KernelParametersKeyType, unknown>> {
+    protected async getOverriddenParameters(_container: Container): Promise<Map<keyof ParametersKeyType, unknown>> {
         return new Map();
     }
 
@@ -265,6 +276,8 @@ export abstract class Kernel implements IKernel {
                 setTimeout(() => p.push(bundle.shutdown()), 1);
             }
         }
+
+        this.eventPublisher?.publish('event.kernel.shutdown', new KernelEvent());
 
         Promise.all(p);
     }

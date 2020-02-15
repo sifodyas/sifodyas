@@ -1,9 +1,14 @@
 import {
     Container,
     ICompilerPass,
-    KernelParametersKeyType as ParamMapping,
+    ParameterKeys,
+    ParametersKeyType as ParamMapping,
+    ParametersMappedType,
     RuntimeException,
+    ServiceKeys,
     ServicesKeyType as ServMapping,
+    ServicesMappedType,
+    UnknownMapping,
 } from '@sifodyas/sifodyas';
 
 let globContainer: Container = null;
@@ -25,38 +30,18 @@ export class FunctionalDepencencyInjectorPass implements ICompilerPass {
     }
 }
 
-/**
- * Hack for union string litteral with string to keep autocomplete
- */
-type UnknownMapping = string & { _?: never };
-
-// Services types
-interface ExtendedServMapping extends ServMapping {
-    [P: string]: unknown;
-}
-type ServKeys = keyof ServMapping;
-type ServMappedType<T> = {
-    [I in keyof T]: ExtendedServMapping[Extract<T[I], ServKeys>];
-};
-
-// Parameters types
-interface ExtendedParamMapping extends ParamMapping {
-    [P: string]: unknown;
-}
-type ParamKeys = keyof ParamMapping;
-type ParamMappedType<T> = {
-    [I in keyof T]: ExtendedParamMapping[Extract<T[I], ParamKeys>];
-};
-
 //
 // GET WAY
 //
 /**
  * Get one service by its name from the internal globalized Container.
  */
-export function getService<U extends ServKeys | UnknownMapping>(serviceId: U | ServKeys) {
+export function getService<
+    U extends ServiceKeys | UnknownMapping,
+    R extends U extends ServiceKeys ? ServMapping[U] : unknown
+>(serviceId: U | ServiceKeys) {
     if (globContainer) {
-        return globContainer.get(serviceId) as U extends ServKeys ? ServMapping[U] : unknown;
+        return globContainer.get(serviceId) as R;
     }
 
     throw new RuntimeException(
@@ -67,16 +52,19 @@ export function getService<U extends ServKeys | UnknownMapping>(serviceId: U | S
 /**
  * Get several services as a tuple by their names from the internal globalized Container.
  */
-export function getServices<K extends ServKeys[], U extends K | UnknownMapping[]>(...serviceIds: U | K) {
-    return ((serviceIds as K).map(getService) as unknown) as ServMappedType<U>;
+export function getServices<K extends ServiceKeys[], U extends K | UnknownMapping[]>(...serviceIds: U | K) {
+    return ((serviceIds as K).map(getService) as unknown) as ServicesMappedType<U>;
 }
 
 /**
  * Get one parameter by its name from the internal globalized Container.
  */
-export function getParameter<U extends ParamKeys | UnknownMapping>(paramId: U | ParamKeys) {
+export function getParameter<
+    U extends ParameterKeys | UnknownMapping,
+    R extends U extends ParameterKeys ? ParamMapping[U] : unknown
+>(paramId: U | ParameterKeys) {
     if (globContainer) {
-        return globContainer.getParameter(paramId) as U extends ParamKeys ? ParamMapping[U] : unknown;
+        return globContainer.getParameter(paramId) as R;
     }
 
     throw new RuntimeException(
@@ -87,8 +75,8 @@ export function getParameter<U extends ParamKeys | UnknownMapping>(paramId: U | 
 /**
  * Get several parameters as a tuple by their names from the internal globalized Container.
  */
-export function getParameters<K extends ParamKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) {
-    return ((paramIds as K).map(getParameter) as unknown) as ParamMappedType<U>;
+export function getParameters<K extends ParameterKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) {
+    return ((paramIds as K).map(getParameter) as unknown) as ParametersMappedType<U>;
 }
 
 //
@@ -105,9 +93,9 @@ type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...arg
  * Inject one service as first argument to a bound function.
  */
 export function injectService<
-    U extends ServKeys | UnknownMapping,
-    F extends (...args: [U extends ServKeys ? ServMapping[U] : unknown, ...any[]]) => unknown
->(f: F, serviceId: U | ServKeys) {
+    U extends ServiceKeys | UnknownMapping,
+    F extends (...args: [U extends ServiceKeys ? ServMapping[U] : unknown, ...any[]]) => unknown
+>(f: F, serviceId: U | ServiceKeys) {
     return f.bind(f, getService(serviceId)) as OmitFirstArg<F>;
 }
 
@@ -115,20 +103,20 @@ export function injectService<
  * Inject several services as first arguments to a bound function.
  */
 export function injectServices<
-    K extends ServKeys[],
+    K extends ServiceKeys[],
     U extends K | UnknownMapping[],
-    F extends (...args: [ServMappedType<U>, ...any[]]) => unknown
+    F extends (...args: [ServicesMappedType<U>, ...any[]]) => unknown
 >(f: F, ...serviceIds: U | K) {
-    return f.bind(f, getServices(...serviceIds) as ServMappedType<U>) as OmitFirstArg<F>;
+    return f.bind(f, getServices(...serviceIds) as ServicesMappedType<U>) as OmitFirstArg<F>;
 }
 
 /**
  * Inject one parameter as first argument to a bound function.
  */
 export function injectParameter<
-    U extends ParamKeys | UnknownMapping,
-    F extends (...args: [U extends ParamKeys ? ParamMapping[U] : unknown, ...any[]]) => unknown
->(f: F, paramId: U | ParamKeys) {
+    U extends ParameterKeys | UnknownMapping,
+    F extends (...args: [U extends ParameterKeys ? ParamMapping[U] : unknown, ...any[]]) => unknown
+>(f: F, paramId: U | ParameterKeys) {
     return f.bind(f, getParameter(paramId)) as OmitFirstArg<F>;
 }
 
@@ -136,62 +124,62 @@ export function injectParameter<
  * Inject several parameters as first arguments to a bound function.
  */
 export function injectParameters<
-    K extends ParamKeys[],
+    K extends ParameterKeys[],
     U extends K | UnknownMapping[],
-    F extends (...args: [ParamMappedType<U>, ...any[]]) => unknown
+    F extends (...args: [ParametersMappedType<U>, ...any[]]) => unknown
 >(f: F, ...paramIds: U | K) {
-    return f.bind(f, getParameters(...paramIds) as ParamMappedType<U>) as OmitFirstArg<F>;
+    return f.bind(f, getParameters(...paramIds) as ParametersMappedType<U>) as OmitFirstArg<F>;
 }
 
 //
 // WITH WAY
 //
-export interface WithService<K extends ServKeys | UnknownMapping = UnknownMapping> {
-    service: K extends ServKeys ? ServMapping[K] : unknown;
+export interface WithService<K extends ServiceKeys | UnknownMapping = UnknownMapping> {
+    service: K extends ServiceKeys ? ServMapping[K] : unknown;
 }
 /**
  * Inject one service inside the first argument object of a function, then return a high order function of it.
  */
-export const withService = <U extends ServKeys | UnknownMapping>(servicesId: U | ServKeys) => <
+export const withService = <U extends ServiceKeys | UnknownMapping>(servicesId: U | ServiceKeys) => <
     P extends WithService<U>
 >(
     component: (props: P) => unknown,
 ) => (props: Omit<P, 'service'>) => component({ ...props, service: getService(servicesId) } as P);
 
-export interface WithServices<K extends ServKeys[] | UnknownMapping[] = UnknownMapping[]> {
-    services: ServMappedType<K>;
+export interface WithServices<K extends ServiceKeys[] | UnknownMapping[] = UnknownMapping[]> {
+    services: ServicesMappedType<K>;
 }
 
 /**
  * Inject several services inside the first argument object of a function, then return a high order function of it.
  */
-export const withServices = <K extends ServKeys[], U extends K | UnknownMapping[]>(...servicesIds: U | K) => <
+export const withServices = <K extends ServiceKeys[], U extends K | UnknownMapping[]>(...servicesIds: U | K) => <
     P extends WithServices<U>
 >(
     component: (props: P) => unknown,
 ) => (props: Omit<P, 'services'>) => component({ ...props, services: getServices(...servicesIds) } as P);
 
-export interface WithParameter<K extends ParamKeys | UnknownMapping = UnknownMapping> {
-    parameter: K extends ParamKeys ? ParamMapping[K] : unknown;
+export interface WithParameter<K extends ParameterKeys | UnknownMapping = UnknownMapping> {
+    parameter: K extends ParameterKeys ? ParamMapping[K] : unknown;
 }
 
 /**
  * Inject one parameter inside the first argument object of a function, then return a high order function of it.
  */
-export const withParameter = <U extends ParamKeys | UnknownMapping>(paramId: U | ParamKeys) => <
+export const withParameter = <U extends ParameterKeys | UnknownMapping>(paramId: U | ParameterKeys) => <
     P extends WithParameter<U>
 >(
     component: (props: P) => unknown,
 ) => (props: Omit<P, 'parameter'>) => component({ ...props, parameter: getParameter(paramId) } as P);
 
-export interface WithParameters<K extends ParamKeys[] | UnknownMapping[] = UnknownMapping[]> {
-    parameters: ParamMappedType<K>;
+export interface WithParameters<K extends ParameterKeys[] | UnknownMapping[] = UnknownMapping[]> {
+    parameters: ParametersMappedType<K>;
 }
 
 /**
  * Inject several parameters inside the first argument object of a function, then return a high order function of it.
  */
-export const withParameters = <K extends ParamKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) => <
+export const withParameters = <K extends ParameterKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) => <
     P extends WithParameters<U>
 >(
     component: (props: P) => unknown,
