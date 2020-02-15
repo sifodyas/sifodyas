@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { version } from '../../package.json';
+import { version } from '../../core/package.json';
 
 if (typeof document !== 'undefined') {
     Object.defineProperty(document, 'currentScript', { value: { src: '' } });

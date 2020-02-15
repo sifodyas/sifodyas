@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es2017",
+    "resolveJsonModule": true,
+    "lib": [
+      "es7",
+      "esnext"
+    ]
+  }
+}

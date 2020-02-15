@@ -1,50 +1,24 @@
 {
-  "name": "@sifodyas/sifodyas",
-  "version": "2.1.0-dev.5",
+  "name": "sifodyas",
+  "version": "2.1.0",
   "description": "Bring the famous bundle / kernel logic to Javascript",
-  "repository": {
-    "url": "git@github.com:sifodyas/sifodyas.git",
-    "type": "git"
-  },
-  "bugs": {
-    "email": "lisag+sifodyas@wynd.eu",
-    "url": "https://github.com/sifodyas/sifodyas/issues"
-  },
-  "homepage": "https://github.com/sifodyas/sifodyas",
-  "keywords": [
-    "sifodyas",
-    "di",
-    "dependency-injection",
-    "typescript",
-    "typescript-library",
-    "bundle-container"
-  ],
-  "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
-  "license": "SEE LICENSE IN LICENSE",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist/",
-    "UPGRADE.md"
-  ],
   "scripts": {
-    "_webpack": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack --config config/webpack/webpack.config.ts",
-    "_webpack-dev-server": "TS_NODE_PROJECT=\"config/webpack/tsconfig.json\" webpack-dev-server --progress --env.development --env.watch --config config/webpack/webpack.config.ts",
-    "clean": "rimraf dist/*",
-    "prebuild": "yarn clean",
-    "build": "yarn _webpack --env.production -p --config-name build",
-    "build:dev": "yarn prebuild && yarn _webpack --env.development --config-name build",
-    "start": "yarn _webpack-dev-server --config-name example",
-    "test": "jest",
-    "test:coverage": "jest --coverage && open ./coverage/lcov-report/index.html",
-    "lint": "tslint --project src/tsconfig.json -c tslint.json 'src/**/*.ts*'",
+    "lint": "tslint --project tsconfig.json -c tslint.json '{core,lib}/**/src/**/*.ts*'",
     "lint:test": "tslint --project test/tsconfig.json -c tslint.json 'test/**/*.ts*'",
     "lint:fix": "yarn lint --fix && yarn lint:test --fix",
-    "pub": "yarn publish"
+    "w": "yarn workspace",
+    "ws": "yarn workspaces",
+    "build:core": "yarn w @sifodyas/sifodyas build",
+    "build:other": "lerna exec --stream --parallel \"yarn rimraf dist/* && TS_NODE_PROJECT=\"\\$LERNA_ROOT_PATH/scripts/tsconfig.json\" yarn webpack --display-error-details --config \\$LERNA_ROOT_PATH/scripts/webpack-other.config.ts\"",
+    "build": "yarn build:core && yarn build:other",
+    "pub": "lerna exec -- yarn publish --non-interactive --registry 'https://nexus.wynd.eu/repository/npm-hosted/'"
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
+  "private": true,
+  "workspaces": [
+    "core",
+    "lib/bundles/*",
+    "lib/plugins/*"
+  ],
   "devDependencies": {
     "@types/circular-dependency-plugin": "^5.0.0",
     "@types/glob": "^7.1.1",
@@ -60,6 +34,7 @@
     "fork-ts-checker-webpack-plugin": "^3.0.0",
     "glob": "^7.1.4",
     "jest": "^24.5.0",
+    "lerna": "^3.19.0",
     "rimraf": "^3.0.0",
     "semver": "^6.0.0",
     "source-map-loader": "^0.2.4",
@@ -75,10 +50,5 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.8",
     "webpack-visualizer-plugin": "^0.1.11"
-  },
-  "dependencies": {
-    "@bios21/tstrait": "^1.1.0",
-    "lodash": "^4.17.15",
-    "yamljs": "^0.3.0"
   }
 }

@@ -1,0 +1,14 @@
+imports:
+    - { resource: parameters.yaml }
+
+test:
+    p1: foo
+    p2: '%env(ENVVAR1)%'
+    p3: '%bar%'
+
+whatever_bundle:
+    foo: bar
+
+
+something_bundle:
+    foo: bar

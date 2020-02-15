@@ -1,0 +1,40 @@
+{
+  "name": "@sifodyas/sifodyas",
+  "version": "2.1.0-dev.26",
+  "description": "Bring the famous bundle / kernel logic to Javascript",
+  "repository": {
+    "url": "git@github.com:sifodyas/sifodyas.git",
+    "directory": "core",
+    "type": "git"
+  },
+  "bugs": {
+    "email": "lisag+sifodyas@wynd.eu",
+    "url": "https://github.com/sifodyas/sifodyas/issues"
+  },
+  "homepage": "https://github.com/sifodyas/sifodyas",
+  "keywords": [
+    "sifodyas",
+    "di",
+    "dependency-injection",
+    "typescript",
+    "typescript-library",
+    "bundle-container"
+  ],
+  "author": "Lilian Saget-Lethias <lisag@wynd.eu>",
+  "license": "MIT",
+  "browser": "dist/index.js",
+  "main": "dist/index.node.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/",
+    "UPGRADE.md"
+  ],
+  "scripts": {
+    "_webpack": "TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts",
+    "build": "rimraf dist/* && TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts"
+  },
+  "dependencies": {
+    "@bios21/tstrait": "^1.1.0",
+    "lodash": "^4.17.15"
+  }
+}

@@ -1,4 +1,5 @@
-import { BundleExtended, Container, Core, ILoader, Kernel, TolerantKernel } from '../src';
+import { BundleExtended, Container, Core, ILoader, JsonLoader, Kernel, TolerantKernel } from '@sifodyas/sifodyas';
+import { YamlLoader } from '@sifodyas/yaml-loader';
 import { Utils } from './__utils__/Utils';
 
 const ENV_VAR_MOCK = 'ENV_VAR_MOCK';
@@ -13,6 +14,7 @@ describe('Kernel', () => {
 
     it('should create and boot properly a Kernel instance', async () => {
         const kernel = new (class TestKernel extends Kernel {
+            public loaders = [YamlLoader, JsonLoader];
             public async registerContainerConfiguration(loader: ILoader): Promise<void> {
                 return loader.load({ content: '{}', path: 'test.json' });
             }
@@ -38,6 +40,7 @@ describe('Kernel', () => {
     ].forEach(config =>
         it(`should load ${config}`, async () => {
             const kernel = new (class TestKernel extends TolerantKernel {
+                public loaders = [YamlLoader, JsonLoader];
                 public async registerContainerConfiguration(loader: ILoader): Promise<void> {
                     return loader.load(await Core.getResource(`${configRoot}/${config}`));
                 }
@@ -51,9 +54,9 @@ describe('Kernel', () => {
 
             const container: Container = kernel['container'];
 
-            expect(await container.getParameter('foo')).toEqual('bar');
-            expect(await container.getParameter('bar')).toEqual(ENV_VAR_MOCK);
-            expect(await container.getParameter('baz')).toEqual({
+            expect(container.getParameter('foo')).toEqual('bar');
+            expect(container.getParameter('bar')).toEqual(ENV_VAR_MOCK);
+            expect(container.getParameter('baz')).toEqual({
                 bar: 'baz',
                 foo: 'bar',
             });
@@ -62,6 +65,7 @@ describe('Kernel', () => {
 
     it('should fail loading unknown conf', async () => {
         const kernel = new (class TestKernel extends Kernel {
+            public loaders = [YamlLoader, JsonLoader];
             public async registerContainerConfiguration(loader: ILoader): Promise<void> {
                 return loader.load(await Core.getResource(`${configRoot}/config_bundle.yaml`));
             }
@@ -76,8 +80,9 @@ describe('Kernel', () => {
 
     it('should NOT fail loading unknown conf with Tolerant', async () => {
         const kernel = new (class TestKernel extends TolerantKernel {
+            public loaders = [YamlLoader, JsonLoader];
             public async registerContainerConfiguration(loader: ILoader): Promise<void> {
-                return loader.load(await Core.getResource(`${configRoot}/config_bundle.yaml`));
+                return loader.load(await Core.getResource(`${configRoot}/config_tolerant.yaml`));
             }
 
             public registerBundles(): BundleExtended[] {
