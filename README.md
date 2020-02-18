@@ -3,7 +3,8 @@
 <img align="right" src="docs/img/sifodyas.svg" height="200" alt="Sifodyas Logo" title="Sifodyas Logo"/>
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![GitHub license](https://img.shields.io/npm/v/@sifodyas/sifodyas.svg)](LICENSE)
+![Last Npm Version](https://img.shields.io/npm/v/@sifodyas/sifodyas.svg)
+![Node version](https://img.shields.io/badge/node-%3E%3D%2012-green.svg)
 
 Bring the famous bundle / kernel logic to Javascript
 
