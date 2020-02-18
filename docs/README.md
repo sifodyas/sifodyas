@@ -9,6 +9,7 @@ The goal is not to handle your whole application and give you ways to build your
 It's used to give you some kind of structure to the low layer of your application architecture.
 
 ## Table of contents <!-- omit in toc -->
+- [Code documentation](#code-documentation)
 - [Definitions](#definitions)
 - [Basic usage](#basic-usage)
 - [Main workflow](#main-workflow)
@@ -16,6 +17,9 @@ It's used to give you some kind of structure to the low layer of your applicatio
   - [Bundle.s (& Services) => Container](#bundles--services--container)
   - [Loaders](#loaders)
   - [EventSystem](#eventsystem)
+
+## Code documentation
+:memo: You can find the generated code documentation [here](dist/index.html).
 
 ## Definitions
 - `Kernel` is the entry point of a Sifodyas application. It role is to load every bundle and to provide them a common container to use.

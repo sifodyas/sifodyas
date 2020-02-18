@@ -2,6 +2,7 @@
 node_modules/
 **/dist/*
 !**/dist/.gitkeep
+!docs/dist/*
 /example/compiled/
 
 tslint-ouput.txt

@@ -1,13 +1,25 @@
 {
   "name": "@sifodyas/fp-di",
-  "version": "2.1.0-dev.26",
+  "version": "3.0.0",
   "description": "Provide a way to have DI from Sifodyas container into Functional Programing (or functional components)",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",
     "directory": "lib/plugins/fp-di",
     "type": "git"
   },
+  "keywords": [
+    "sifodyas",
+    "di",
+    "dependency-injection",
+    "typescript",
+    "typescript-library",
+    "bundle-container",
+    "service-locator",
+    "functional",
+    "functional-programming"
+  ],
   "main": "dist/index.js",
+  "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "files": [
@@ -15,6 +27,6 @@
     "UPGRADE.md"
   ],
   "peerDependencies": {
-    "@sifodyas/sifodyas": "^2"
+    "@sifodyas/sifodyas": "^3"
   }
 }

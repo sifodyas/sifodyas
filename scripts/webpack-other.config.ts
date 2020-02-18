@@ -3,14 +3,7 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
 import webpack from 'webpack';
-import {
-    APP_PACKAGE_JSON as packageJson,
-    banner,
-    DtsBanner,
-    externals,
-    ROOT_APP_PATH,
-    ROOT_WORKSPACE,
-} from './webpack-utils';
+import { APP_PACKAGE_JSON as packageJson, banner, DtsBanner, externals, ROOT_APP_PATH } from './webpack-utils';
 
 export interface WebpackEnvParam {
     watch?: boolean;

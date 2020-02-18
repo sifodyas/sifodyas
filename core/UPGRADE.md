@@ -1,23 +1,41 @@
 # Upgrade
 
-## `v2.0.0` to `v2.1.0`
+## `v2.0.0` to `v3.0.0`
+### Dist / Package
+- The `browser` field is now used for web related build, alongside the `main` field which is now only used for node build.
+
+### Git Repository
+- Sifodyas is now open source on Github :tada:
+  - The repository is now a monorepo and the main source code is now located under the `core/` folder.
+  - Plugins and additional bundles are now under `lib/plugins/` and `lib/bunldes/` folders.
+
+### YamlLoader
+- The `YamlLoader` is now in a separated plugin, `@sifodyas/yaml-loader`.
+
 ### Bundles
 - "Parents & dependencies" features will not be added. You can safely remove related methods.
 
 ### Kernel
-- `boot` and `shutdown` methods does not longer return something. (they return `Promise<void>` now)
+- `boot` and `shutdown` methods no longer return something. (they return `Promise<void>` now)
 - `getParameter` is not async anymore
-- Loaders returned by `getContainerLoader` are now only `JsonLoader` by default. `YamlLoader` is now in a separated plugin, `@sifodyas/yaml-loader`.  
-  Also, the protected member `loaders` should now be used in order to change default loaders.
+- Loaders returned by `getContainerLoader` are now only `JsonLoader` by default. Also, the protected member `loaders` should now be used in order to change default loaders.
 
 ### Config
 - The env prefix `yaml:` is now handled by a separated plugin, `@sifodyas/yaml-env-parser`
 
 ### Global
 - `KernelParametersKeyType` is now `ParametersKeyType`
+- `ServicesKeyType` now maps the type of requested services
 
 ### Event sytem
-- `EventPublisher` and `EventSubscriber` are now available as services.
+- `EventPublisher` and `EventSubscriber` are now available as services as long as `kernel.events` parameter is true.
+- `EventKeyType` maps the type of listened events
+
+### Functional Programming & Dependency Injection
+- Is pure functions, you should now use the plugin `@sifodyas/fp-di` to access the container.
+
+### Trait
+- Trait are now handled by an external dependency: [`@bios21/tstrait`](https://github.com/bios21/tstrait)
 
 ## `v1.7` to `v2.0.0`
 ### Global changes

@@ -1,13 +1,25 @@
 {
   "name": "@sifodyas/yaml-loader",
-  "version": "2.1.0-dev.26",
-  "description": "Add YamlLoader to Sifodyas",
+  "version": "3.0.0",
+  "description": "Add a YamlLoader to Sifodyas",
   "repository": {
     "url": "git@github.com:sifodyas/sifodyas.git",
     "directory": "lib/plugins/yaml-loader",
     "type": "git"
   },
+  "keywords": [
+    "sifodyas",
+    "di",
+    "dependency-injection",
+    "typescript",
+    "typescript-library",
+    "bundle-container",
+    "service-locator",
+    "yaml",
+    "yml"
+  ],
   "main": "dist/index.js",
+  "browser": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "files": [
@@ -19,6 +31,6 @@
     "yamljs": "^0.3.0"
   },
   "peerDependencies": {
-    "@sifodyas/sifodyas": "^2"
+    "@sifodyas/sifodyas": "^3"
   }
 }
