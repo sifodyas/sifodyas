@@ -28,7 +28,7 @@ export class ContainerEvent implements IEvent<ContainerState> {
         this.container = container;
     }
 
-    public get container() {
+    get container() {
         return this._container;
     }
 
@@ -36,7 +36,7 @@ export class ContainerEvent implements IEvent<ContainerState> {
      * Internal method to set the container. If it's called from outside (when the ContainerEvent is already inited),
      * it will throw an EventException.
      */
-    public set container(container: Container) {
+    set container(container: Container) {
         if (this.inited) {
             throw new EventException('Container should not be overided in a fired ContainerEvent.');
         }

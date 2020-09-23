@@ -9,7 +9,7 @@ export class Expression {
      *
      * @param expression An expression.
      */
-    public constructor(expression: unknown) {
+    constructor(expression: unknown) {
         this.expression = Object.prototype.toString.call(expression);
     }
 

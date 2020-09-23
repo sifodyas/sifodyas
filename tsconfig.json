@@ -18,6 +18,9 @@
     "strictNullChecks": false,
     "target": "es2015",
     "resolveJsonModule": true,
+    "importsNotUsedAsValues": "preserve",
+    "incremental": true,
+    "tsBuildInfoFile": "./.cache/tsc/.tsbuildinfo",
     "lib": [
       "dom",
       "esnext"

@@ -4,12 +4,12 @@ import { BundleExtended } from '../../kernel/bundle/Bundle';
 import { Container } from '../Container';
 import { LogicException } from '../exception/LogicException';
 import { IConfigurationExtension } from './IConfigurationExtension';
-import { IExtension } from './IExtension';
+import { GenericConfig, IExtension } from './IExtension';
 
 /**
  * Provides useful features shared by many extensions.
  */
-export abstract class Extension<T = object> implements IExtension, IConfigurationExtension<T> {
+export abstract class Extension<T = GenericConfig> implements IExtension, IConfigurationExtension<T> {
     protected bundle: BundleExtended;
     protected processedConfig: unknown = null;
 
@@ -34,9 +34,9 @@ export abstract class Extension<T = object> implements IExtension, IConfiguratio
         }
     }
 
-    public abstract getConfiguration(config: object, container: Container): IConfiguration<T>;
+    public abstract getConfiguration(config: GenericConfig, container: Container): IConfiguration<T>;
 
-    public abstract load(configs: object, container: Container): Promise<void>;
+    public abstract load(configs: GenericConfig, container: Container): Promise<void>;
 
     public getAlias() {
         const SUFFIX = 'Extension',

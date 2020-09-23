@@ -14,7 +14,7 @@ export class Reference {
      *
      * @see Container
      */
-    public constructor(id: string, invalidBehavior = ContainerError.EXCEPTION_ON_INVALID_REFERENCE) {
+    constructor(id: string, invalidBehavior = ContainerError.EXCEPTION_ON_INVALID_REFERENCE) {
         this.id = id.toLowerCase();
         this.invalidBehavior = invalidBehavior;
     }

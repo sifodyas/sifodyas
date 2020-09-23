@@ -8,7 +8,7 @@ export type EnvPrefix = 'base64' | 'boolean' | 'float' | 'int' | 'json' | 'resol
 
 export class EnvVarProcessor {
     private systemEnvCaseResolver: Map<string, string | undefined> = new Map();
-    public constructor(private container: Container) {
+    constructor(private container: Container) {
         if (process?.env) {
             Object.keys(process.env).forEach(env => {
                 this.systemEnvCaseResolver.set(env.toLowerCase(), process.env[env]);

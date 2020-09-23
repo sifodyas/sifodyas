@@ -2,12 +2,12 @@ import {
     Container,
     ICompilerPass,
     ParameterKeys,
-    ParametersKeyType as ParamMapping,
     ParametersMappedType,
+    ParametersKeyType as ParamMapping,
     RuntimeException,
     ServiceKeys,
-    ServicesKeyType as ServMapping,
     ServicesMappedType,
+    ServicesKeyType as ServMapping,
     UnknownMapping,
 } from '@sifodyas/sifodyas';
 
@@ -36,10 +36,12 @@ export class FunctionalDepencencyInjectorPass implements ICompilerPass {
 /**
  * Get one service by its name from the internal globalized Container.
  */
-export function getService<
+export const getService = <
     U extends ServiceKeys | UnknownMapping,
     R extends U extends ServiceKeys ? ServMapping[U] : unknown
->(serviceId: U | ServiceKeys) {
+>(
+    serviceId: U | ServiceKeys,
+) => {
     if (globContainer) {
         return globContainer.get(serviceId) as R;
     }
@@ -47,22 +49,23 @@ export function getService<
     throw new RuntimeException(
         'Seems like the FunctionalDepencencyInjectorPass was not processed. Make sure that it is registered in container.',
     );
-}
+};
 
 /**
  * Get several services as a tuple by their names from the internal globalized Container.
  */
-export function getServices<K extends ServiceKeys[], U extends K | UnknownMapping[]>(...serviceIds: U | K) {
-    return ((serviceIds as K).map(getService) as unknown) as ServicesMappedType<U>;
-}
+export const getServices = <K extends ServiceKeys[], U extends K | UnknownMapping[]>(...serviceIds: U | K) =>
+    ((serviceIds as K).map(getService) as unknown) as ServicesMappedType<U>;
 
 /**
  * Get one parameter by its name from the internal globalized Container.
  */
-export function getParameter<
+export const getParameter = <
     U extends ParameterKeys | UnknownMapping,
     R extends U extends ParameterKeys ? ParamMapping[U] : unknown
->(paramId: U | ParameterKeys) {
+>(
+    paramId: U | ParameterKeys,
+) => {
     if (globContainer) {
         return globContainer.getParameter(paramId) as R;
     }
@@ -70,14 +73,13 @@ export function getParameter<
     throw new RuntimeException(
         'Seems like the FunctionalDepencencyInjectorPass was not processed. Make sure that it is registered in container.',
     );
-}
+};
 
 /**
  * Get several parameters as a tuple by their names from the internal globalized Container.
  */
-export function getParameters<K extends ParameterKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) {
-    return ((paramIds as K).map(getParameter) as unknown) as ParametersMappedType<U>;
-}
+export const getParameters = <K extends ParameterKeys[], U extends K | UnknownMapping[]>(...paramIds: U | K) =>
+    ((paramIds as K).map(getParameter) as unknown) as ParametersMappedType<U>;
 
 //
 // INJECT WAY
@@ -92,44 +94,48 @@ type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...arg
 /**
  * Inject one service as first argument to a bound function.
  */
-export function injectService<
+export const injectService = <
     U extends ServiceKeys | UnknownMapping,
     F extends (...args: [U extends ServiceKeys ? ServMapping[U] : unknown, ...any[]]) => unknown
->(f: F, serviceId: U | ServiceKeys) {
-    return f.bind(f, getService(serviceId)) as OmitFirstArg<F>;
-}
+>(
+    f: F,
+    serviceId: U | ServiceKeys,
+) => f.bind(f, getService(serviceId)) as OmitFirstArg<F>;
 
 /**
  * Inject several services as first arguments to a bound function.
  */
-export function injectServices<
+export const injectServices = <
     K extends ServiceKeys[],
     U extends K | UnknownMapping[],
     F extends (...args: [ServicesMappedType<U>, ...any[]]) => unknown
->(f: F, ...serviceIds: U | K) {
-    return f.bind(f, getServices(...serviceIds) as ServicesMappedType<U>) as OmitFirstArg<F>;
-}
+>(
+    f: F,
+    ...serviceIds: U | K
+) => f.bind(f, getServices(...serviceIds) as ServicesMappedType<U>) as OmitFirstArg<F>;
 
 /**
  * Inject one parameter as first argument to a bound function.
  */
-export function injectParameter<
+export const injectParameter = <
     U extends ParameterKeys | UnknownMapping,
     F extends (...args: [U extends ParameterKeys ? ParamMapping[U] : unknown, ...any[]]) => unknown
->(f: F, paramId: U | ParameterKeys) {
-    return f.bind(f, getParameter(paramId)) as OmitFirstArg<F>;
-}
+>(
+    f: F,
+    paramId: U | ParameterKeys,
+) => f.bind(f, getParameter(paramId)) as OmitFirstArg<F>;
 
 /**
  * Inject several parameters as first arguments to a bound function.
  */
-export function injectParameters<
+export const injectParameters = <
     K extends ParameterKeys[],
     U extends K | UnknownMapping[],
     F extends (...args: [ParametersMappedType<U>, ...any[]]) => unknown
->(f: F, ...paramIds: U | K) {
-    return f.bind(f, getParameters(...paramIds) as ParametersMappedType<U>) as OmitFirstArg<F>;
-}
+>(
+    f: F,
+    ...paramIds: U | K
+) => f.bind(f, getParameters(...paramIds) as ParametersMappedType<U>) as OmitFirstArg<F>;
 
 //
 // WITH WAY

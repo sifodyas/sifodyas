@@ -27,7 +27,7 @@
     "UPGRADE.md"
   ],
   "dependencies": {
-    "@bios21/tstrait": "^1.1.0",
+    "@lsagetlethias/tstrait": "^2.0.2",
     "yamljs": "^0.3.0"
   },
   "peerDependencies": {

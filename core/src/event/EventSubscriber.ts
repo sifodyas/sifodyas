@@ -30,6 +30,7 @@ export class EventSubscriber implements IReset {
      * (related to the event triggered) everytime a publish is made.
      *
      * This feature is experimental, use it at your own risk.
+     *
      * @deprecated experimental
      */
     public async *iterate<KEY extends keyof EventKeyType | UnknownMapping>(
@@ -75,7 +76,7 @@ export class EventSubscriber implements IReset {
 }
 
 // utils
-const AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(async function*() {}));
+const AsyncIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf(async function* () {}));
 
 function createIterResult(value: unknown, done: boolean) {
     return { value, done };

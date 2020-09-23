@@ -8,7 +8,7 @@ import { ICompilerPass } from './compiler/passe/ICompilerPass';
 import { EnvPrefix, EnvVarProcessor } from './env/EnvVarProcessor';
 import { LogicException } from './exception/LogicException';
 import { ParameterCircularReferenceException } from './exception/ParameterCircularReferenceException';
-import { IExtension } from './extension/IExtension';
+import { GenericConfig, IExtension } from './extension/IExtension';
 import { IContainer } from './IContainer';
 import { FrozenParameterBag } from './parameterBag/FrozenParameterBag';
 import { IParameterBag } from './parameterBag/IParameterBag';
@@ -34,7 +34,7 @@ export class Container implements IContainer, IReset {
      *
      * @returns A IParameterBag instance.
      */
-    public get parameterBag() {
+    get parameterBag() {
         return this._parameterBag;
     }
 
@@ -43,7 +43,7 @@ export class Container implements IContainer, IReset {
      *
      * @returns A map of IExtension
      */
-    public get extensions() {
+    get extensions() {
         return new Map(this._extensions);
     }
 
@@ -56,7 +56,7 @@ export class Container implements IContainer, IReset {
 
     private static FORBIDDEN_SERVICE_NAMES = ['service_container'];
 
-    private extensionConfigs = new Map<string, object>();
+    private extensionConfigs = new Map<string, GenericConfig>();
 
     private envCounters = new Map<string, number>();
     private envCache = new Map<string, string>();
@@ -72,7 +72,7 @@ export class Container implements IContainer, IReset {
 
     protected resolving = new Map<string, boolean>();
 
-    public constructor(parameterBag: IParameterBag = new ParameterBag()) {
+    constructor(parameterBag: IParameterBag = new ParameterBag()) {
         this._parameterBag = parameterBag;
         (this._parameterBag as ParameterBag).container = this;
     }
@@ -140,8 +140,8 @@ export class Container implements IContainer, IReset {
      * Compiles the container.
      *
      * This method does two things:
-     *  * Parameter values are resolved;
-     *  * The parameter bag is frozen.
+     * * Parameter values are resolved;
+     * * The parameter bag is frozen.
      *
      * @async
      */
@@ -339,7 +339,7 @@ export class Container implements IContainer, IReset {
      * @param name The name of the extension.
      * @returns A map of configuration.
      */
-    public getExtensionConfig(name: string): object {
+    public getExtensionConfig(name: string): GenericConfig {
         if (!this.extensionConfigs.has(name)) {
             this.extensionConfigs.set(name, {});
         }
@@ -357,7 +357,7 @@ export class Container implements IContainer, IReset {
      *
      * @throws LogicException if the container is compiled.
      */
-    public loadFromExtension(extension: string, values: object = {}): this {
+    public loadFromExtension(extension: string, values: GenericConfig = {}): this {
         if (this.isCompiled()) {
             throw new LogicException('Can not load from an extension on a compiled container.');
         }
@@ -478,7 +478,7 @@ export class Container implements IContainer, IReset {
  */
 export class MergeExtensionConfigurationContainer extends Container {
     private extensionClass: string;
-    public constructor(extension: IExtension, parameterBag: IParameterBag = null) {
+    constructor(extension: IExtension, parameterBag: IParameterBag = null) {
         super(parameterBag);
         this.extensionClass = extension.constructor.name;
     }

@@ -1,4 +1,4 @@
-import { Trait } from '@bios21/tstrait';
+import { Trait } from '@lsagetlethias/tstrait';
 import { Container } from './Container';
 
 /**
