@@ -1,4 +1,5 @@
 import { Container, MergeExtensionConfigurationContainer } from '../../Container';
+import { GenericConfig } from '../../extension';
 import { ICompilerPass } from './ICompilerPass';
 
 /**
@@ -25,7 +26,7 @@ export class MergeExtensionConfigurationPass implements ICompilerPass {
                 return;
             }
 
-            config = container.parameterBag.resolveValue(config) as object;
+            config = container.parameterBag.resolveValue(config) as GenericConfig;
 
             p.push(
                 (async () => {

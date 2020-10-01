@@ -3,6 +3,7 @@ import {
     BundleExtended,
     Core,
     Extension,
+    GenericConfig,
     IConfiguration,
     ILoader,
     JsonLoader,
@@ -84,7 +85,7 @@ describe('Bundle', () => {
                                     }
                                 })());
                         }
-                        public async load(configs: object) {
+                        public async load(configs: GenericConfig) {
                             const config = this.processConfiguration(this.getConfiguration(), configs);
 
                             // p1: foo

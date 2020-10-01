@@ -1,19 +1,19 @@
-//@ts-check
-const { pathsToModuleNameMapper } = require('ts-jest/utils');
+// @ts-check
 const path = require('path');
 const fs = require('fs');
+const { pathsToModuleNameMapper } = require('ts-jest/utils');
 
 const tsconfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, './test/tsconfig.json'), { encoding: 'utf-8' }));
 const moduleNameMapper = pathsToModuleNameMapper(tsconfig.compilerOptions.paths, {
     prefix: '<rootDir>',
 });
 
-/** @type Partial<jest.DefaultOptions> & { [K: string]: any } */
+/** @type Partial<import('@jest/types').Config.InitialOptions> */
 const config = {
     globals: {
         'ts-jest': {
-            tsConfig: '<rootDir>/test/tsconfig.json'
-        }
+            tsConfig: '<rootDir>/test/tsconfig.json',
+        },
     },
     preset: 'ts-jest',
     setupFilesAfterEnv: ['<rootDir>/test/__tools__/setup.ts'],
@@ -26,7 +26,7 @@ const config = {
     testMatch: ['**/test/**/?(*.)(spec|test).(ts|tsx)'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'json'],
     testEnvironmentOptions: {
-        url: 'file://' + __dirname + '/test',
+        url: `file://${__dirname}/test`,
     },
     moduleNameMapper,
 };

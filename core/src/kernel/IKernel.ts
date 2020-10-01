@@ -9,12 +9,14 @@ import { BundleExtended } from './bundle/Bundle';
 export interface IKernel {
     /**
      * Boot the current Kernel.
+     *
      * @async
      */
     boot(): Promise<void>;
 
     /**
      * Shutdowns the Kernel.
+     *
      * @async
      */
     shutdown(): Promise<void>;

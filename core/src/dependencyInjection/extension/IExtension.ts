@@ -1,5 +1,7 @@
 import { Container } from '../Container';
 
+export type GenericConfig = Record<string, unknown>;
+
 /**
  * IExtension is the interface implemented by container extension classes.
  */
@@ -10,7 +12,7 @@ export interface IExtension {
      * @param configs A map of configuration values.
      * @param container The Container instance
      */
-    load(configs: object, container: Container): Promise<void>;
+    load(configs: GenericConfig, container: Container): Promise<void>;
 
     /**
      * Returns the recommended alias that is the mandatory prefix to use when using YAML.

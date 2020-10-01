@@ -1,4 +1,4 @@
-// tslint:disable:no-empty-interface
+/* eslint-disable @typescript-eslint/no-empty-interface */
 /**
  * Base interface representing a generic exception in a container.
  */

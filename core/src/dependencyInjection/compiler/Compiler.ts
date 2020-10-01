@@ -44,6 +44,7 @@ export class Compiler {
 
     /**
      * Run the Compiler and process all Passes.
+     *
      * @async
      */
     public async compile(container: Container) {
@@ -91,78 +92,78 @@ export class Compiler {
     /**
      * Gets all passes for the AfterRemoving pass.
      */
-    public get afterRemovingPasses() {
+    get afterRemovingPasses() {
         return this.sortPasses(this._afterRemovingPasses);
     }
     /**
      * Sets the AfterRemoving passes.
      */
-    public set afterRemovingPasses(passes: ICompilerPass[]) {
+    set afterRemovingPasses(passes: ICompilerPass[]) {
         this._afterRemovingPasses = [passes];
     }
 
     /**
      * Gets all passes for the BeforeOptimization pass.
      */
-    public get beforeOptimizationPasses() {
+    get beforeOptimizationPasses() {
         return this.sortPasses(this._beforeOptimizationPasses);
     }
     /**
      * Sets the BeforeOptimization passes.
      */
-    public set beforeOptimizationPasses(passes: ICompilerPass[]) {
+    set beforeOptimizationPasses(passes: ICompilerPass[]) {
         this._beforeOptimizationPasses = [passes];
     }
 
     /**
      * Gets all passes for the BeforeRemoving pass.
      */
-    public get beforeRemovingPasses() {
+    get beforeRemovingPasses() {
         return this.sortPasses(this._beforeRemovingPasses);
     }
     /**
      * Sets the BeforeRemoving passes.
      */
-    public set beforeRemovingPasses(passes: ICompilerPass[]) {
+    set beforeRemovingPasses(passes: ICompilerPass[]) {
         this._beforeRemovingPasses = [passes];
     }
 
     /**
      * Gets all passes for the Optimization pass.
      */
-    public get optimizationPasses() {
+    get optimizationPasses() {
         return this.sortPasses(this._optimizationPasses);
     }
     /**
      * Sets the Optimization passes.
      */
-    public set optimizationPasses(passes: ICompilerPass[]) {
+    set optimizationPasses(passes: ICompilerPass[]) {
         this._optimizationPasses = [passes];
     }
 
     /**
      * Gets all passes for the Removing pass.
      */
-    public get removingPasses() {
+    get removingPasses() {
         return this.sortPasses(this._removingPasses);
     }
     /**
      * Sets the Removing passes.
      */
-    public set removingPasses(passes: ICompilerPass[]) {
+    set removingPasses(passes: ICompilerPass[]) {
         this._removingPasses = [passes];
     }
 
     /**
      * Gets the Merge pass.
      */
-    public get mergePass() {
+    get mergePass() {
         return this._mergePass;
     }
     /**
      * Sets the Merge pass.
      */
-    public set mergePass(pass: ICompilerPass) {
+    set mergePass(pass: ICompilerPass) {
         this._mergePass = pass;
     }
 }

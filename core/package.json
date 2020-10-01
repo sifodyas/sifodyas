@@ -38,7 +38,7 @@
     "build": "rimraf dist/* && TS_NODE_PROJECT=\"./webpack/tsconfig.json\" webpack --config ./webpack/webpack.config.ts"
   },
   "dependencies": {
-    "@bios21/tstrait": "^1.1.0",
+    "@lsagetlethias/tstrait": "^2.0.2",
     "lodash": "^4.17.15"
   }
 }

@@ -1,9 +1,10 @@
-// tslint:disable:object-literal-sort-keys
-// tslint:disable:no-default-export
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+/* eslint-disable import/no-default-export */
+/* eslint-disable no-console */
+
 import path from 'path';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
-import { APP_PACKAGE_JSON as packageJson, banner, DtsBanner, externals, ROOT_APP_PATH } from './webpack-utils';
+import { banner, DtsBanner, externals, APP_PACKAGE_JSON as packageJson, ROOT_APP_PATH } from './webpack-utils';
 
 export interface WebpackEnvParam {
     watch?: boolean;
@@ -52,9 +53,11 @@ export default function webpackConfig(environment?: WebpackEnvParam): webpack.Co
         plugins: [
             new ForkTsCheckerWebpackPlugin({
                 async: false,
-                useTypescriptIncrementalApi: true,
-                tsconfig: `${ROOT_APP_PATH}/src/tsconfig.json`,
-                watch: path.resolve(ROOT_APP_PATH, 'src'),
+                // useTypescriptIncrementalApi: true,
+                typescript: {
+                    configFile: `${ROOT_APP_PATH}/src/tsconfig.json`,
+                },
+                // watch: path.resolve(ROOT_APP_PATH, 'src'),
             }),
             new webpack.BannerPlugin({
                 banner,

@@ -1,5 +1,4 @@
-// tslint:disable:object-literal-sort-keys
-// tslint:disable:no-default-export
+/* eslint-disable import/no-default-export */
 import CircularDependencyPlugin from 'circular-dependency-plugin';
 import semver from 'semver';
 import webpack from 'webpack';

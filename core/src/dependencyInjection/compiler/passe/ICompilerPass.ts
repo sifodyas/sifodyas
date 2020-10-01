@@ -6,6 +6,7 @@ import { IContainer } from '../../IContainer';
 export interface ICompilerPass {
     /**
      * You can modify the container here.
+     *
      * @async
      */
     process(container: IContainer): Promise<void>;

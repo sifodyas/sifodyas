@@ -59,6 +59,7 @@ export abstract class Kernel implements IKernel {
 
     /**
      * Initializes the service container.
+     *
      * @async
      */
     protected async initializeContainer() {
@@ -224,7 +225,7 @@ export abstract class Kernel implements IKernel {
         const p = [],
             SYNC_MODE = this.container.getParameter('kernel.boot.sync') === true;
         if (SYNC_MODE) {
-            console.warn('\u26a0\ufe0f\ufe0f Kernel is booting synchronously ! \u26a0\ufe0f\ufe0f'); // tslint:disable-line:no-console
+            console.warn('\u26a0\ufe0f\ufe0f Kernel is booting synchronously ! \u26a0\ufe0f\ufe0f'); // eslint-disable-line no-console
         }
         for (const name of this.syncBundles) {
             const bundle = this.bundles.get(name);
@@ -312,14 +313,14 @@ export abstract class Kernel implements IKernel {
         if (doTimeout) {
             setTimeout(doer, 1);
         } else {
-            console.warn('\u26a0\ufe0f\ufe0f Kernel is unregistering synchronously ! \u26a0\ufe0f\ufe0f'); // tslint:disable-line:no-console
+            console.warn('\u26a0\ufe0f\ufe0f Kernel is unregistering synchronously ! \u26a0\ufe0f\ufe0f'); // eslint-disable-line no-console
             await doer();
         }
     }
 
     public abstract registerBundles(): BundleExtended[];
 
-    public abstract async registerContainerConfiguration(loader: ILoader): Promise<void>;
+    public abstract registerContainerConfiguration(loader: ILoader): Promise<void>;
 
     public getBundle(name: string) {
         if (!this.bundles.has(name)) {

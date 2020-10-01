@@ -9,3 +9,7 @@ tslint-ouput.txt
 /example/compiled/*
 
 /coverage/*
+
+*.log
+
+/.cache/

@@ -7,12 +7,14 @@ import { IExtension } from '../../dependencyInjection/extension/IExtension';
 export interface IBundle {
     /**
      * Boot the Bundle.
+     *
      * @async
      */
     boot(): Promise<any>;
 
     /**
      * Shutdown the Bundle.
+     *
      * @async
      */
     shutdown(): Promise<any>;

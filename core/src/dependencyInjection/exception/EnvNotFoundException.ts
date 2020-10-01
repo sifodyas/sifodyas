@@ -6,7 +6,7 @@ import { InvalidArgumentException } from './InvalidArgumentException';
 export class EnvNotFoundException extends InvalidArgumentException {
     public baseClass = 'EnvNotFoundException';
 
-    public constructor(name: string) {
+    constructor(name: string) {
         super(`Environment variable not found: "${name}".`);
     }
 }

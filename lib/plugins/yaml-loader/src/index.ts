@@ -1,4 +1,4 @@
-import { Use } from '@bios21/tstrait';
+import { Use } from '@lsagetlethias/tstrait';
 import { JsonBasedLoaderTrait, Loader, ResourceFile } from '@sifodyas/sifodyas';
 import YAML from 'yamljs';
 

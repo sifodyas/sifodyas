@@ -20,11 +20,11 @@ export class ParameterBag implements IParameterBag<unknown> {
     }
 
     private getComplex(name: string) {
-        let ret: unknown = null; // tslint:disable-line:prefer-const
+        let ret: unknown = null; // eslint-disable-line prefer-const
         this.parameters.forEach((_, key) => {
             if (name.startsWith(key)) {
                 try {
-                    eval(`ret = value${name.replace(key, '')};`); // tslint:disable-line:no-eval
+                    eval(`ret = value${name.replace(key, '')};`); // eslint-disable-line no-eval
                 } finally {
                 }
                 return;

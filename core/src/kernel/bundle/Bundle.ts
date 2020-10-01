@@ -1,4 +1,4 @@
-import { Ctor, Use } from '@bios21/tstrait';
+import { Ctor, Use } from '@lsagetlethias/tstrait';
 import { Container } from '../../dependencyInjection/Container';
 import { ContainerAwareTrait } from '../../dependencyInjection/ContainerAwareTrait';
 import { IExtension } from '../../dependencyInjection/extension/IExtension';
@@ -10,9 +10,9 @@ import { IBundle } from './IBundle';
 abstract class AbstractBundle implements IBundle {
     protected name!: string;
 
-    public abstract async boot(): Promise<any>;
+    public abstract boot(): Promise<any>;
 
-    public abstract async shutdown(): Promise<any>;
+    public abstract shutdown(): Promise<any>;
 
     public build(_container: Container) {}
 

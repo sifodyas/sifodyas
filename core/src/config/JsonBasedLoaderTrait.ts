@@ -1,4 +1,4 @@
-import { Trait } from '@bios21/tstrait';
+import { Trait } from '@lsagetlethias/tstrait';
 import merge from 'lodash/merge';
 import { Core } from '../core/Core';
 import { ContainerError } from '../dependencyInjection';
@@ -37,7 +37,7 @@ export class JsonBasedLoaderTrait extends Trait {
             for (const imports of content['imports']) {
                 if (!Core.isPureTypedObject<ImportConfigObject>(imports, { resource: '' })) {
                     throw new InvalidArgumentException(
-                        // tslint:disable-next-line:max-line-length
+                        // eslint-disable-next-line max-len
                         `The values in the "imports" key should be key-valued (like {resource: string, ignore_errors?: boolean, type?: string}) in ${path}. Check your syntax.`,
                     );
                 }

@@ -14,7 +14,7 @@ export abstract class Loader implements ILoader {
     protected container: Container;
     protected _resolver!: ILoaderResolver;
 
-    public constructor(container: Container) {
+    constructor(container: Container) {
         this.container = container;
     }
 
@@ -34,7 +34,7 @@ export abstract class Loader implements ILoader {
         }
     }
 
-    public abstract async load(resourceFile: ResourceFile, type?: string): Promise<void>;
+    public abstract load(resourceFile: ResourceFile, type?: string): Promise<void>;
 
     public abstract supports(resourceFile: ResourceFile, type?: string): boolean;
 
@@ -43,7 +43,7 @@ export abstract class Loader implements ILoader {
      *
      * @returns A ILoaderResolver instance.
      */
-    public get resolver() {
+    get resolver() {
         return this._resolver;
     }
 
@@ -52,7 +52,7 @@ export abstract class Loader implements ILoader {
      *
      * @param resolver A ILoaderResolver instance.
      */
-    public set resolver(resolver: ILoaderResolver) {
+    set resolver(resolver: ILoaderResolver) {
         this._resolver = resolver;
     }
 
